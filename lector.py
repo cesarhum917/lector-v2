@@ -1,13 +1,18 @@
 #!/usr/bin/env python3
 """
-lector.py — Lector de noticias (v2)
-===================================
-Pipeline:  fuentes.yaml -> autodiscovery RSS -> fetch -> SQLite (dedup)
+lector.py — Lector de noticias (v2, esquema catalogo)
+=====================================================
+Pipeline:  catalogo.yaml -> autodiscovery RSS -> fetch -> SQLite (dedup)
            -> Claude (resumen + agrupacion + importancia) -> datos.json
 
-v2 separa datos de presentacion: este script SOLO genera datos.json.
-El frontend (index.html) es estatico, carga datos.json y filtra en el
-navegador segun las preferencias de cada usuario (localStorage).
+El catalogo ES el producto (ver CATALOGO.md): fuentes planas con
+temas (1+), tipo (medio|voz|primaria|longform|agregador|podcast|video)
+y postura declarada. Los paquetes de onboarding son CONSULTAS sobre el
+catalogo (temas x tipos), no listas fijas: se exportan tal cual y el
+frontend los resuelve en el navegador.
+
+El frontend (index.html) es estatico, carga datos.json y filtra por tema
+y por tipo segun las preferencias de cada usuario (localStorage).
 El costo de API escala con el numero de fuentes, nunca con el de usuarios.
 
 Uso:
@@ -26,7 +31,6 @@ import os
 import re
 import sqlite3
 import time
-import unicodedata
 from datetime import datetime, timedelta, timezone
 from urllib.parse import urljoin, urlparse
 
@@ -39,7 +43,7 @@ from bs4 import BeautifulSoup
 # CONFIGURACION
 # ----------------------------------------------------------------------
 DB_PATH = "lector.db"
-FUENTES_PATH = "fuentes.yaml"
+CATALOGO_PATH = "catalogo.yaml"
 SALIDA_JSON = "datos.json"
 
 MODELO = "claude-haiku-4-5-20251001"   # el mas barato ($1/$5 por MTok). NO cambiar: es por costo.
@@ -51,6 +55,17 @@ UA = {
     "Accept": "application/rss+xml, application/atom+xml, application/xml, text/html;q=0.9,*/*;q=0.8",
 }
 
+# Etiquetas visibles de los tipos de fuente (ver CATALOGO.md)
+TIPOS = [
+    {"id": "medio", "nombre": "Prensa"},
+    {"id": "voz", "nombre": "Voces"},
+    {"id": "primaria", "nombre": "Primarias"},
+    {"id": "longform", "nombre": "Long-form"},
+    {"id": "agregador", "nombre": "Agregadores"},
+    {"id": "podcast", "nombre": "Podcasts"},
+    {"id": "video", "nombre": "Video"},
+]
+
 
 # ----------------------------------------------------------------------
 # BASE DE DATOS
@@ -60,10 +75,11 @@ def init_db():
     con.execute("""
         CREATE TABLE IF NOT EXISTS articulos (
             id           TEXT PRIMARY KEY,   -- hash de la url
-            seccion      TEXT,
-            fuente_id    TEXT,               -- id de la fuente configurada en fuentes.yaml
-            fuente       TEXT,               -- medio visible (en Google News, el medio real)
-            tipo         TEXT,               -- rss | youtube | podcast
+            fuente_id    TEXT,               -- id de la fuente en catalogo.yaml
+            fuente       TEXT,               -- medio visible (en agregadores, el medio real)
+            tema         TEXT,               -- tema principal (temas[0] de la fuente): para lotes de Claude
+            tipo         TEXT,               -- tipo de la fuente (medio|voz|...)
+            resumible    INTEGER DEFAULT 0,  -- copia del resumir de la fuente al ingerir
             titulo       TEXT,
             url          TEXT,
             extracto     TEXT,
@@ -71,7 +87,7 @@ def init_db():
             visto        TEXT,               -- cuando lo capturamos
             resumen      TEXT,               -- generado por Claude
             etiqueta     TEXT,
-            relevancia   INTEGER DEFAULT 0,  -- importancia periodistica 0-10 (por seccion)
+            relevancia   INTEGER DEFAULT 0,  -- importancia periodistica 0-10 (por tema)
             cluster      TEXT,               -- id del grupo de duplicados
             dominio      TEXT,               -- para el icono de la fuente
             imagen       TEXT,               -- thumbnail si el feed la trae
@@ -79,11 +95,9 @@ def init_db():
             procesado    INTEGER DEFAULT 0
         )
     """)
-    # Migracion suave si la base viene de v1
+    # Migracion suave si la base viene del esquema anterior (secciones)
     cols = [r[1] for r in con.execute("PRAGMA table_info(articulos)")]
-    for col, tipo_sql in [("fuente_id", "TEXT"), ("tipo", "TEXT"),
-                          ("imagen", "TEXT"), ("duracion", "INTEGER"),
-                          ("dominio", "TEXT")]:
+    for col, tipo_sql in [("tema", "TEXT"), ("resumible", "INTEGER DEFAULT 0")]:
         if col not in cols:
             con.execute(f"ALTER TABLE articulos ADD COLUMN {col} {tipo_sql}")
     con.execute("CREATE INDEX IF NOT EXISTS idx_pub ON articulos(publicado)")
@@ -98,14 +112,6 @@ def hash_url(url: str) -> str:
     return hashlib.sha256(limpia.encode()).hexdigest()[:16]
 
 
-def slug(texto: str) -> str:
-    """Id estable a partir del nombre, para fuentes agregadas sin 'id' explicito
-    (por ejemplo desde admin.py)."""
-    t = unicodedata.normalize("NFKD", texto).encode("ascii", "ignore").decode()
-    t = re.sub(r"[^a-z0-9]+", "-", t.lower()).strip("-")
-    return t or hashlib.sha256(texto.encode()).hexdigest()[:8]
-
-
 # ----------------------------------------------------------------------
 # AUTODESCUBRIMIENTO DE FEEDS
 # ----------------------------------------------------------------------
@@ -114,7 +120,7 @@ CACHE_FEEDS = {}
 
 def descubrir_feed(url_sitio: str) -> str | None:
     """Busca el <link rel=alternate type=application/rss+xml> del sitio.
-    Asi solo necesitas la URL del sitio en fuentes.yaml, nunca la del RSS."""
+    Asi en catalogo.yaml basta el 'sitio', nunca la URL del RSS."""
     if url_sitio in CACHE_FEEDS:
         return CACHE_FEEDS[url_sitio]
 
@@ -201,13 +207,6 @@ def fecha_de(entry) -> str:
     return datetime.now(timezone.utc).isoformat()
 
 
-def tipo_de(fuente: dict) -> str:
-    if fuente.get("tipo"):
-        return fuente["tipo"]
-    u = (fuente.get("feed") or fuente.get("url") or "")
-    return "youtube" if "youtube.com" in u else "rss"
-
-
 def imagen_de(entry) -> str:
     for m in (entry.get("media_thumbnail") or []):
         if m.get("url"):
@@ -243,68 +242,68 @@ def ingestar(con, config) -> int:
     nuevos = 0
     ahora = datetime.now(timezone.utc).isoformat()
 
-    for seccion in config["secciones"]:
-        print(f"\n[{seccion['nombre']}]")
-        for fuente in seccion["fuentes"]:
-            nombre = fuente["nombre"]
-            fid = fuente.get("id") or slug(nombre)
-            tipo = tipo_de(fuente)
-            feed_url = fuente.get("feed")
+    for fuente in config["fuentes"]:
+        nombre = fuente["nombre"]
+        fid = fuente["id"]
+        tema = fuente["temas"][0]        # tema principal: define el lote de Claude
+        tipo = fuente["tipo"]
+        resumible = 1 if fuente.get("resumir") else 0
+        feed_url = fuente.get("feed")
 
+        if not feed_url:
+            feed_url = descubrir_feed(fuente["sitio"])
             if not feed_url:
-                feed_url = descubrir_feed(fuente["url"])
-                if not feed_url:
-                    print(f"  x {nombre}: sin feed (revisar a mano)")
-                    continue
+                print(f"  x {nombre}: sin feed (revisar a mano)")
+                continue
+
+        try:
+            d = feedparser.parse(feed_url, request_headers=UA)
+        except Exception as e:
+            print(f"  x {nombre}: {e}")
+            continue
+
+        if not d.entries:
+            print(f"  x {nombre}: feed vacio")
+            continue
+
+        tope = fuente.get("max", 30)
+        cuenta = 0
+        for e in d.entries[:tope]:
+            url = e.get("link")
+            if not url:
+                continue
+            aid = hash_url(url)
+            extracto = limpiar_html(e.get("summary", "") or e.get("description", ""))
+
+            # Agregadores (Google News): el medio real viene en <source>. Lo
+            # usamos como etiqueta visible y para el favicon, pero fuente_id
+            # sigue apuntando a la fuente del catalogo (para poder ocultarla).
+            titulo = e.get("title", "(sin titulo)")
+            medio, dominio = nombre, dominio_de(url)
+            src = e.get("source")
+            if src and getattr(src, "get", None):
+                if src.get("title"):
+                    medio = src["title"]
+                if src.get("href"):
+                    dominio = dominio_de(src["href"])
+                # Google News repite " - Medio" al final del titulo
+                titulo = re.sub(r"\s+-\s+[^-]+$", "", titulo).strip() or titulo
 
             try:
-                d = feedparser.parse(feed_url, request_headers=UA)
-            except Exception as e:
-                print(f"  x {nombre}: {e}")
-                continue
+                con.execute(
+                    "INSERT INTO articulos (id, fuente_id, fuente, tema, tipo, resumible, "
+                    "titulo, url, extracto, publicado, visto, dominio, imagen, duracion) "
+                    "VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
+                    (aid, fid, medio, tema, tipo, resumible, titulo, url, extracto,
+                     fecha_de(e), ahora, dominio, imagen_de(e), duracion_de(e)),
+                )
+                cuenta += 1
+                nuevos += 1
+            except sqlite3.IntegrityError:
+                pass  # ya lo teniamos: dedup gratis, sin gastar API
 
-            if not d.entries:
-                print(f"  x {nombre}: feed vacio")
-                continue
-
-            tope = fuente.get("max", 30)
-            cuenta = 0
-            for e in d.entries[:tope]:
-                url = e.get("link")
-                if not url:
-                    continue
-                aid = hash_url(url)
-                extracto = limpiar_html(e.get("summary", "") or e.get("description", ""))
-
-                # Google News: el medio real viene en <source>. Lo usamos como
-                # etiqueta visible y para el favicon, pero fuente_id sigue
-                # apuntando a la fuente configurada (para poder ocultarla).
-                titulo = e.get("title", "(sin titulo)")
-                medio, dominio = nombre, dominio_de(url)
-                src = e.get("source")
-                if src and getattr(src, "get", None):
-                    if src.get("title"):
-                        medio = src["title"]
-                    if src.get("href"):
-                        dominio = dominio_de(src["href"])
-                    # Google News repite " - Medio" al final del titulo
-                    titulo = re.sub(r"\s+-\s+[^-]+$", "", titulo).strip() or titulo
-
-                try:
-                    con.execute(
-                        "INSERT INTO articulos (id, seccion, fuente_id, fuente, tipo, "
-                        "titulo, url, extracto, publicado, visto, dominio, imagen, duracion) "
-                        "VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)",
-                        (aid, seccion["id"], fid, medio, tipo, titulo, url, extracto,
-                         fecha_de(e), ahora, dominio, imagen_de(e), duracion_de(e)),
-                    )
-                    cuenta += 1
-                    nuevos += 1
-                except sqlite3.IntegrityError:
-                    pass  # ya lo teniamos: dedup gratis, sin gastar API
-
-            print(f"  + {nombre}: {cuenta} nuevos")
-            con.commit()
+        print(f"  + {nombre}: {cuenta} nuevos")
+        con.commit()
 
     return nuevos
 
@@ -312,16 +311,16 @@ def ingestar(con, config) -> int:
 # ----------------------------------------------------------------------
 # CAPA CLAUDE: resumen, agrupacion de duplicados, importancia
 # ----------------------------------------------------------------------
-# v2: la puntuacion es IMPORTANCIA PERIODISTICA GENERAL por seccion, no
-# relevancia contra un perfil personal. El lector es multiusuario: cada
-# quien filtra en el navegador, pero el score debe servirle a todos.
+# La puntuacion es IMPORTANCIA PERIODISTICA GENERAL por tema, no relevancia
+# contra un perfil personal. El lector es multiusuario: cada quien filtra en
+# el navegador, pero el score debe servirle a todos.
 PROMPT = """Eres el editor de un lector de noticias. Los siguientes {n} articulos
-pertenecen a la seccion "{seccion}". Para cada uno:
+pertenecen al tema "{tema}". Para cada uno:
 1. "resumen": una frase en espanol, informativa y concreta (max 25 palabras).
    Nada de "el articulo habla de". Di el hecho.
 2. "etiqueta": una palabra clave.
 3. "importancia": 0-10 con criterio periodistico general para lectores que
-   siguen esta seccion. 8-10 = noticia mayor, desarrollo significativo o de
+   siguen este tema. 8-10 = noticia mayor, desarrollo significativo o de
    impacto amplio. 5-7 = util para quien sigue el tema. 0-4 = ruido, refrito,
    nota menor o contenido promocional.
 4. "cluster": si varios articulos cuentan LA MISMA noticia, dales el mismo
@@ -335,17 +334,11 @@ ARTICULOS:
 
 
 def procesar_con_claude(con, config, activo=True, marcar_sin_api=False):
-    nombres = {s["id"]: s["nombre"] for s in config["secciones"]}
-    secciones_resumibles = {s["id"] for s in config["secciones"] if s.get("resumir")}
-    if not secciones_resumibles:
-        return
+    nombres = {t["id"]: t["nombre"] for t in config["temas"]}
 
-    marca = ",".join("?" * len(secciones_resumibles))
     pendientes = con.execute(
-        f"SELECT id, seccion, fuente, titulo, extracto FROM articulos "
-        f"WHERE procesado = 0 AND seccion IN ({marca})",
-        tuple(secciones_resumibles),
-    ).fetchall()
+        "SELECT id, tema, fuente, titulo, extracto FROM articulos "
+        "WHERE procesado = 0 AND resumible = 1").fetchall()
 
     if not pendientes:
         print("\nNada nuevo que procesar con Claude.")
@@ -368,13 +361,13 @@ def procesar_con_claude(con, config, activo=True, marcar_sin_api=False):
         from anthropic import Anthropic
         client = Anthropic()
 
-        # Lotes por seccion: el criterio de importancia es seccional, y los
-        # clusters de duplicados solo tienen sentido dentro de una seccion.
-        por_seccion = {}
+        # Lotes por tema: el criterio de importancia es tematico, y los
+        # clusters de duplicados solo tienen sentido dentro de un tema.
+        por_tema = {}
         for p in pendientes:
-            por_seccion.setdefault(p[1], []).append(p)
+            por_tema.setdefault(p[1], []).append(p)
 
-        for sid, filas in por_seccion.items():
+        for tid, filas in por_tema.items():
             for i in range(0, len(filas), MAX_ITEMS_POR_LOTE):
                 lote = filas[i:i + MAX_ITEMS_POR_LOTE]
                 listado = "\n".join(
@@ -386,7 +379,7 @@ def procesar_con_claude(con, config, activo=True, marcar_sin_api=False):
                         model=MODELO,
                         max_tokens=4000,
                         messages=[{"role": "user", "content": PROMPT.format(
-                            seccion=nombres.get(sid, sid), n=len(lote), articulos=listado)}],
+                            tema=nombres.get(tid, tid), n=len(lote), articulos=listado)}],
                     )
                     texto = msg.content[0].text.strip()
                     texto = re.sub(r"^```(?:json)?|```$", "", texto, flags=re.M).strip()
@@ -400,93 +393,93 @@ def procesar_con_claude(con, config, activo=True, marcar_sin_api=False):
                              int(d.get("importancia", 5)), d.get("cluster", d["id"]), d["id"]),
                         )
                     con.commit()
-                    print(f"  [{sid}] lote {i // MAX_ITEMS_POR_LOTE + 1}: {len(datos)} listos")
+                    print(f"  [{tid}] lote {i // MAX_ITEMS_POR_LOTE + 1}: {len(datos)} listos")
                     time.sleep(1)
 
                 except Exception as e:
-                    print(f"  ! error en lote [{sid}]: {e}")
+                    print(f"  ! error en lote [{tid}]: {e}")
                     # No los marcamos: se reintentan en la siguiente corrida
                     continue
 
-    # Lo que no se resume (long-form, cine, libros, podcasts) queda listo tal cual
-    con.execute(f"UPDATE articulos SET procesado=1, cluster=id "
-                f"WHERE procesado=0 AND seccion NOT IN ({marca})",
-                tuple(secciones_resumibles))
+    # Lo que no se resume (longform, podcasts...) queda listo tal cual
+    con.execute("UPDATE articulos SET procesado=1, cluster=id "
+                "WHERE procesado=0 AND resumible=0")
     con.commit()
 
 
 # ----------------------------------------------------------------------
-# EXPORTAR datos.json (catalogo de secciones/fuentes + articulos planos)
+# EXPORTAR datos.json (catalogo completo + articulos planos)
 # ----------------------------------------------------------------------
 def exportar_json(con, config, dias=3):
     corte = (datetime.now(timezone.utc) - timedelta(days=dias)).isoformat()
 
-    secciones = []
-    for orden, s in enumerate(config["secciones"]):
-        fuentes = []
-        for f in s["fuentes"]:
-            u = f.get("feed") or f.get("url") or ""
-            fuentes.append({
-                "id": f.get("id") or slug(f["nombre"]),
-                "nombre": f["nombre"],
-                "dominio": dominio_de(u),
-                "tipo": tipo_de(f),
-            })
-        secciones.append({
-            "id": s["id"],
-            "nombre": s["nombre"],
-            "orden": orden,
-            "resumida": bool(s.get("resumir")),
-            "defaults": {
-                "min_relevancia": s.get("min_relevancia", 0),
-                "max_por_fuente": s.get("max_por_fuente", 0),
-            },
-            "fuentes": fuentes,
+    fuentes = []
+    for f in config["fuentes"]:
+        fuentes.append({
+            "id": f["id"],
+            "nombre": f["nombre"],
+            "dominio": dominio_de(f.get("sitio") or f.get("feed") or ""),
+            "temas": f["temas"],
+            "tipo": f["tipo"],
+            "idioma": f.get("idioma"),
+            "region": f.get("region", "global"),
+            "postura": f.get("postura"),
+            "resumida": bool(f.get("resumir")),
+            "porque": f.get("porque", ""),
         })
+    ids_catalogo = {f["id"] for f in fuentes}
 
     filas = con.execute(
-        "SELECT id, seccion, fuente_id, fuente, dominio, tipo, titulo, url, "
-        "resumen, etiqueta, relevancia, cluster, publicado, imagen, duracion "
+        "SELECT id, fuente_id, fuente, dominio, tipo, titulo, url, resumen, "
+        "etiqueta, relevancia, cluster, publicado, imagen, duracion "
         "FROM articulos WHERE publicado > ? AND procesado = 1 "
         "ORDER BY publicado DESC", (corte,)).fetchall()
 
     articulos = []
     for r in filas:
+        if r[1] not in ids_catalogo:
+            continue  # fuente retirada del catalogo (o del esquema anterior)
         a = {
             "id": r[0],
-            "seccion": r[1],
-            "fuente": r[2] or slug(r[3] or ""),
-            "medio": r[3] or "",
-            "dominio": r[4] or "",
-            "tipo": r[5] or "rss",
-            "titulo": r[6] or "(sin titulo)",
-            "url": r[7],
-            "relevancia": r[10] if r[10] is not None else 0,
-            "cluster": r[11] or r[0],
-            "publicado": r[12],
+            "fuente": r[1],
+            "medio": r[2] or "",
+            "dominio": r[3] or "",
+            "tipo": r[4] or "medio",
+            "titulo": r[5] or "(sin titulo)",
+            "url": r[6],
+            "relevancia": r[9] if r[9] is not None else 0,
+            "cluster": r[10] or r[0],
+            "publicado": r[11],
         }
+        if r[7]:
+            a["resumen"] = r[7]
         if r[8]:
-            a["resumen"] = r[8]
-        if r[9]:
-            a["etiqueta"] = r[9]
+            a["etiqueta"] = r[8]
+        if r[12]:
+            a["imagen"] = r[12]
         if r[13]:
-            a["imagen"] = r[13]
-        if r[14]:
-            a["duracion"] = r[14]
+            a["duracion"] = r[13]
         articulos.append(a)
 
     datos = {
-        "schema": 1,
+        "schema": 2,
         "generado": datetime.now(timezone.utc).isoformat(),
         "dias": dias,
-        "secciones": secciones,
+        "temas": config["temas"],
+        "tipos": TIPOS,
+        # Un paquete es una CONSULTA sobre el catalogo (temas x tipos):
+        # el frontend lo resuelve en el navegador, asi las fuentes nuevas
+        # entran solas a quien eligio el paquete.
+        "paquetes": config.get("paquetes", []),
+        "fuentes": fuentes,
         "articulos": articulos,
     }
     with open(SALIDA_JSON, "w", encoding="utf-8") as f:
         json.dump(datos, f, ensure_ascii=False, separators=(",", ":"))
     kb = os.path.getsize(SALIDA_JSON) // 1024
     print(f"\n-> {SALIDA_JSON} listo: {len(articulos)} articulos, "
-          f"{len(secciones)} secciones, {kb} KB, ultimos {dias} dias.")
+          f"{len(fuentes)} fuentes, {len(datos['temas'])} temas, "
+          f"{len(datos['paquetes'])} paquetes, {kb} KB, ultimos {dias} dias.")
 
 
 # ----------------------------------------------------------------------
@@ -497,7 +490,7 @@ def main():
     ap.add_argument("--solo-export", action="store_true", help="solo regenerar datos.json")
     args = ap.parse_args()
 
-    with open(FUENTES_PATH, encoding="utf-8") as f:
+    with open(CATALOGO_PATH, encoding="utf-8") as f:
         config = yaml.safe_load(f)
 
     con = init_db()

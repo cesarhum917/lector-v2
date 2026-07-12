@@ -1,0 +1,528 @@
+# ============================================================
+# catalogo.yaml — El catálogo ES el producto.
+# Reglas de curaduría: ver CATALOGO.md. No agregues nada sin leerlo.
+#
+# REGLA DURA: toda fuente lleva "porque". Si no puedes escribir qué aporta
+# que ninguna otra aporte, la fuente no entra.
+# ============================================================
+
+temas:
+  - id: ia
+    nombre: "Inteligencia Artificial"
+    color: "#7aa2f7"
+  - id: negocios
+    nombre: "Negocios y ecommerce"
+    color: "#e0a83a"
+  - id: mexico
+    nombre: "México"
+    color: "#9ece6a"
+  - id: local
+    nombre: "Toluca / EdoMex"
+    color: "#73daca"
+  - id: internacional
+    nombre: "Internacional"
+    color: "#bb9af7"
+  - id: alimentos
+    nombre: "Miel y alimentos"
+    color: "#e0af68"
+  - id: cine
+    nombre: "Cine"
+    color: "#f7768e"
+  - id: libros
+    nombre: "Libros"
+    color: "#c0caf5"
+  - id: ideas
+    nombre: "Ideas y long-form"
+    color: "#ff9e64"
+
+# ------------------------------------------------------------
+# PAQUETES DE ARRANQUE
+# Un paquete es una CONSULTA sobre el catálogo, no una lista fija.
+# Así, al agregar una fuente nueva, entra sola a quien eligió ese paquete.
+# ------------------------------------------------------------
+paquetes:
+  - id: ia_sin_ruido
+    nombre: "IA sin ruido"
+    descripcion: "Las voces que van meses adelante de la prensa. Cero notas de lanzamiento."
+    temas: [ia]
+    tipos: [voz, primaria]
+
+  - id: ia_completo
+    nombre: "IA completa"
+    descripcion: "Voces, fuentes primarias y la cobertura de prensa."
+    temas: [ia]
+    tipos: [voz, primaria, medio]
+
+  - id: mexico_plural
+    nombre: "México plural"
+    descripcion: "Cobertura nacional con distintas líneas editoriales, a propósito."
+    temas: [mexico]
+    tipos: [medio, agregador]
+
+  - id: leer_despacio
+    nombre: "Leer despacio"
+    descripcion: "Ensayo, crónica e investigación. Poco volumen, alta señal. Sin resumir."
+    temas: [ideas, cine, libros]
+    tipos: [longform]
+
+  - id: vender_en_amazon
+    nombre: "Vender en Amazon"
+    descripcion: "Cambios de política, tarifas y ecommerce en México."
+    temas: [negocios]
+    tipos: [medio, voz, video]
+
+fuentes:
+
+  # ==========================================================
+  # IA — aquí las VOCES valen más que los MEDIOS. Es el caso
+  # que motivó todo el eje "tipo de fuente".
+  # ==========================================================
+  - id: simon_willison
+    nombre: "Simon Willison"
+    feed: "https://simonwillison.net/atom/everything/"
+    sitio: "https://simonwillison.net"
+    temas: [ia]
+    tipo: voz
+    idioma: en
+    volumen: medio
+    resumir: true
+    max: 15
+    porque: "Prueba las herramientas antes que nadie y documenta lo que falla, no lo que promete el marketing."
+
+  - id: one_useful_thing
+    nombre: "One Useful Thing"
+    feed: "https://www.oneusefulthing.org/feed"
+    sitio: "https://www.oneusefulthing.org"
+    temas: [ia]
+    tipo: voz
+    idioma: en
+    volumen: bajo
+    resumir: true
+    porque: "Ethan Mollick traduce la investigación a uso real en el trabajo. Nadie más hace ese puente."
+
+  - id: import_ai
+    nombre: "Import AI"
+    feed: "https://importai.substack.com/feed"
+    sitio: "https://importai.substack.com"
+    temas: [ia]
+    tipo: voz
+    idioma: en
+    volumen: bajo
+    resumir: true
+    porque: "Jack Clark lee los papers que nadie lee y explica por qué importan. Perspectiva de política pública."
+
+  - id: interconnects
+    nombre: "Interconnects"
+    feed: "https://www.interconnects.ai/feed"
+    sitio: "https://www.interconnects.ai"
+    temas: [ia]
+    tipo: voz
+    idioma: en
+    volumen: bajo
+    resumir: true
+    porque: "Nathan Lambert es de los pocos que explica el entrenamiento de modelos desde adentro."
+
+  - id: openai_news
+    nombre: "OpenAI"
+    feed: "https://openai.com/news/rss.xml"
+    sitio: "https://openai.com"
+    temas: [ia]
+    tipo: primaria
+    idioma: en
+    volumen: bajo
+    resumir: true
+    porque: "La fuente original. Sin intermediario que exagere o malinterprete el anuncio."
+
+  - id: deepmind
+    nombre: "Google DeepMind"
+    feed: "https://deepmind.google/discover/blog/feed/"
+    sitio: "https://deepmind.google"
+    temas: [ia]
+    tipo: primaria
+    idioma: en
+    volumen: bajo
+    resumir: true
+    porque: "Fuente original del laboratorio con más investigación publicada."
+
+  - id: hf_blog
+    nombre: "Hugging Face"
+    feed: "https://huggingface.co/blog/feed.xml"
+    sitio: "https://huggingface.co"
+    temas: [ia]
+    tipo: primaria
+    idioma: en
+    volumen: medio
+    resumir: true
+    max: 10
+    porque: "Donde aterriza el open source. Lo que se puede correr uno mismo, no solo lo que se anuncia."
+
+  - id: mit_tech_review
+    nombre: "MIT Technology Review"
+    feed: "https://www.technologyreview.com/feed/"
+    sitio: "https://www.technologyreview.com"
+    temas: [ia]
+    tipo: medio
+    idioma: en
+    volumen: medio
+    resumir: true
+    porque: "El único medio grande que cubre IA sin caer en hype ni en pánico."
+
+  # ==========================================================
+  # MÉXICO — Aquí la POSTURA es obligatoria, y la regla de
+  # diversidad manda: nunca cinco medios de la misma línea.
+  # ==========================================================
+  - id: animal_politico
+    nombre: "Animal Político"
+    feed: "https://news.google.com/rss/search?q=site:animalpolitico.com&hl=es-419&gl=MX&ceid=MX:es-419"
+    sitio: "https://www.animalpolitico.com"
+    temas: [mexico]
+    tipo: medio
+    idioma: es
+    region: mx
+    postura: critica-gobierno
+    volumen: alto
+    resumir: true
+    max: 10
+    porque: "Periodismo de datos y verificación. Vía Google News porque bloquea lectores RSS."
+
+  - id: el_universal
+    nombre: "El Universal"
+    feed: "https://www.eluniversal.com.mx/arc/outboundfeeds/rss/?outputType=xml"
+    sitio: "https://www.eluniversal.com.mx"
+    temas: [mexico]
+    tipo: medio
+    idioma: es
+    region: mx
+    postura: centro
+    volumen: alto
+    resumir: true
+    max: 10
+    porque: "Cobertura amplia y establecida. Es la línea base contra la que se contrastan los demás."
+
+  - id: el_financiero
+    nombre: "El Financiero"
+    sitio: "https://www.elfinanciero.com.mx"
+    temas: [mexico, negocios]
+    tipo: medio
+    idioma: es
+    region: mx
+    postura: centro-derecha
+    volumen: alto
+    resumir: true
+    max: 10
+    porque: "El mejor ángulo económico y de mercados en México."
+
+  - id: aristegui
+    nombre: "Aristegui Noticias"
+    # su /feed responde vacio; via Google News porque bloquea lectores RSS
+    feed: "https://news.google.com/rss/search?q=site:aristeguinoticias.com&hl=es-419&gl=MX&ceid=MX:es-419"
+    sitio: "https://aristeguinoticias.com"
+    temas: [mexico]
+    tipo: medio
+    idioma: es
+    region: mx
+    postura: critica-gobierno
+    volumen: alto
+    resumir: true
+    max: 10
+    porque: "Investigación y entrevista larga. Rompe historias que otros no tocan."
+
+  - id: el_pais_mx
+    nombre: "El País (México)"
+    sitio: "https://elpais.com/mexico/"
+    temas: [mexico]
+    tipo: medio
+    idioma: es
+    region: mx
+    postura: centro-izquierda
+    volumen: alto
+    resumir: true
+    max: 10
+    porque: "Mirada extranjera sobre México. Ve cosas que la prensa local normaliza."
+
+  # ==========================================================
+  # LOCAL — Toluca / EdoMex
+  # ==========================================================
+  - id: adnoticias
+    nombre: "AD Noticias"
+    sitio: "https://adnoticias.mx"
+    temas: [local]
+    tipo: medio
+    idioma: es
+    region: mx
+    volumen: medio
+    resumir: true
+    porque: "Agencia local de Toluca. Cubre lo municipal que ningún nacional toca."
+
+  - id: digitalmex
+    nombre: "DigitalMEX"
+    sitio: "https://www.digitalmex.mx"
+    temas: [local]
+    tipo: medio
+    idioma: es
+    region: mx
+    volumen: medio
+    resumir: true
+    porque: "Política mexiquense a detalle. Especializado, no generalista."
+
+  - id: gn_toluca
+    nombre: "Google News — Toluca / Metepec"
+    feed: "https://news.google.com/rss/search?q=Toluca+OR+Metepec&hl=es-419&gl=MX&ceid=MX:es-419"
+    sitio: "https://news.google.com"
+    temas: [local]
+    tipo: agregador
+    idioma: es
+    region: mx
+    volumen: alto
+    resumir: true
+    max: 15
+    porque: "Red de seguridad: rescata lo local de medios que no tienen RSS propio."
+
+  # ==========================================================
+  # NEGOCIOS / AMAZON
+  # ==========================================================
+  - id: value_added_resource
+    nombre: "Value Added Resource"
+    feed: "https://www.valueaddedresource.net/rss/"
+    sitio: "https://valueaddedresource.net"
+    temas: [negocios]
+    tipo: voz
+    idioma: en
+    volumen: medio
+    resumir: true
+    porque: "Avisa de cambios de política de Amazon antes que nadie, desde el lado del vendedor."
+
+  - id: marketing4ecommerce
+    nombre: "Marketing4eCommerce MX"
+    feed: "https://marketing4ecommerce.mx/feed/"
+    sitio: "https://marketing4ecommerce.mx"
+    temas: [negocios]
+    tipo: medio
+    idioma: es
+    region: mx
+    volumen: alto
+    resumir: true
+    max: 12
+    porque: "La mejor cobertura de ecommerce mexicano: Amazon MX, Mercado Libre, TikTok Shop."
+
+  - id: my_amazon_guy
+    nombre: "My Amazon Guy"
+    feed: "https://www.youtube.com/feeds/videos.xml?channel_id=UClUSEsDS2sdgNJfCcCM_5Uw"
+    sitio: "https://www.youtube.com/@myamazonguy"
+    temas: [negocios]
+    tipo: video
+    idioma: en
+    volumen: alto
+    resumir: true
+    max: 8
+    porque: "Táctico y diario: PPC y problemas operativos reales de Seller Central."
+
+  # ==========================================================
+  # ALIMENTOS / MIEL — aquí la PRIMARIA es lo más valioso
+  # ==========================================================
+  - id: gn_miel_fraude
+    nombre: "Miel: adulteración y autenticidad"
+    feed: "https://news.google.com/rss/search?q=miel+(adulteraci%C3%B3n+OR+fraude+OR+autenticidad+OR+pureza)&hl=es-419&gl=MX&ceid=MX:es-419"
+    sitio: "https://news.google.com"
+    temas: [alimentos]
+    tipo: agregador
+    idioma: es
+    region: mx
+    volumen: medio
+    resumir: true
+    porque: "Rastrea el fraude de miel en toda la prensa. Ninguna fuente única lo cubre."
+
+  - id: gn_regulacion
+    nombre: "Regulación alimentaria MX"
+    feed: "https://news.google.com/rss/search?q=(SENASICA+OR+COFEPRIS+OR+%22NOM-051%22+OR+etiquetado)+alimentos&hl=es-419&gl=MX&ceid=MX:es-419"
+    sitio: "https://news.google.com"
+    temas: [alimentos]
+    tipo: agregador
+    idioma: es
+    region: mx
+    volumen: medio
+    resumir: true
+    porque: "Cambios de SENASICA/COFEPRIS/NOM que pueden obligar a rehacer una etiqueta."
+
+  - id: food_dive
+    nombre: "Food Dive"
+    feed: "https://www.fooddive.com/feeds/news/"
+    sitio: "https://www.fooddive.com"
+    temas: [alimentos, negocios]
+    tipo: medio
+    idioma: en
+    volumen: medio
+    resumir: true
+    porque: "Industria alimentaria de EE.UU.: tendencias que llegan a México con dos años de retraso."
+
+  # ==========================================================
+  # LONG-FORM — resumir: false. Se lee entero, no se resume.
+  # ==========================================================
+  - id: new_yorker
+    nombre: "The New Yorker"
+    feed: "https://www.newyorker.com/feed/rss"
+    sitio: "https://www.newyorker.com"
+    temas: [ideas]
+    tipo: longform
+    idioma: en
+    volumen: medio
+    resumir: false
+    porque: "El estándar del reportaje largo en inglés."
+
+  - id: propublica
+    nombre: "ProPublica"
+    feed: "https://www.propublica.org/feeds/propublica/main"
+    sitio: "https://www.propublica.org"
+    temas: [ideas]
+    tipo: longform
+    idioma: en
+    volumen: bajo
+    resumir: false
+    porque: "Investigación sin fines de lucro. Sin presión comercial sobre qué se publica."
+
+  - id: quanta
+    nombre: "Quanta Magazine"
+    feed: "https://www.quantamagazine.org/feed/"
+    sitio: "https://www.quantamagazine.org"
+    temas: [ideas]
+    tipo: longform
+    idioma: en
+    volumen: bajo
+    resumir: false
+    porque: "Ciencia dura explicada sin simplificar de más. Sin equivalente en español."
+
+  - id: longreads
+    nombre: "Longreads"
+    feed: "https://longreads.com/feed/"
+    sitio: "https://longreads.com"
+    temas: [ideas]
+    tipo: agregador
+    idioma: en
+    volumen: bajo
+    resumir: false
+    porque: "Curaduría del mejor long-form de la semana. Un editor humano ya filtró."
+
+  - id: gatopardo
+    nombre: "Gatopardo"
+    feed: "https://news.google.com/rss/search?q=site:gatopardo.com&hl=es-419&gl=MX&ceid=MX:es-419"
+    sitio: "https://gatopardo.com"
+    temas: [ideas]
+    tipo: longform
+    idioma: es
+    region: mx
+    volumen: bajo
+    resumir: false
+    porque: "La mejor crónica larga en México. Vía Google News porque bloquea lectores RSS."
+
+  - id: quinto_elemento
+    nombre: "Quinto Elemento Lab"
+    feed: "https://quintoelab.org/feed/"
+    sitio: "https://quintoelab.org"
+    temas: [ideas, mexico]
+    tipo: longform
+    idioma: es
+    region: mx
+    volumen: bajo
+    resumir: false
+    porque: "Investigación mexicana de largo aliento. Publica poco porque tarda meses en cada historia."
+
+  - id: anfibia
+    nombre: "Revista Anfibia"
+    feed: "https://www.revistaanfibia.com/feed/"
+    sitio: "https://www.revistaanfibia.com"
+    temas: [ideas]
+    tipo: longform
+    idioma: es
+    region: latam
+    volumen: bajo
+    resumir: false
+    porque: "Crónica y ensayo desde Argentina. Abre la mirada más allá de México."
+
+  # ==========================================================
+  # CINE — utilidad sobre popularidad, en su forma más pura.
+  # Cero cartelera. Cero Rotten Tomatoes.
+  # ==========================================================
+  - id: reverse_shot
+    nombre: "Reverse Shot"
+    feed: "https://reverseshot.org/archive/entry/rss"
+    sitio: "https://reverseshot.org"
+    temas: [cine]
+    tipo: longform
+    idioma: en
+    volumen: bajo
+    resumir: false
+    porque: "La mejor crítica cinéfila en inglés. Del Museum of the Moving Image, no de una revista de estrenos."
+
+  - id: mubi_notebook
+    nombre: "MUBI Notebook"
+    feed: "https://mubi.com/notebook/posts.rss"
+    sitio: "https://mubi.com/notebook"
+    temas: [cine]
+    tipo: longform
+    idioma: en
+    volumen: bajo
+    resumir: false
+    porque: "Ensayo de cine y rescates. Escribe sobre lo que no está en cartelera."
+
+  - id: senses_of_cinema
+    nombre: "Senses of Cinema"
+    feed: "https://www.sensesofcinema.com/feed/"
+    sitio: "https://www.sensesofcinema.com"
+    temas: [cine]
+    tipo: longform
+    idioma: en
+    volumen: bajo
+    resumir: false
+    porque: "Lo más cercano a crítica académica sin volverse ilegible."
+
+  # ==========================================================
+  # LIBROS
+  # ==========================================================
+  - id: letras_libres
+    nombre: "Letras Libres"
+    feed: "https://letraslibres.com/feed/"
+    sitio: "https://letraslibres.com"
+    temas: [libros, ideas]
+    tipo: longform
+    idioma: es
+    region: mx
+    volumen: bajo
+    resumir: false
+    porque: "Ensayo y crítica literaria en español, con tradición mexicana."
+
+  - id: lrb
+    nombre: "London Review of Books"
+    feed: "https://www.lrb.co.uk/feeds/rss"
+    sitio: "https://www.lrb.co.uk"
+    temas: [libros, ideas]
+    tipo: longform
+    idioma: en
+    volumen: bajo
+    resumir: false
+    porque: "La reseña larga como género propio: el libro es pretexto para un ensayo."
+
+  # ==========================================================
+  # PODCASTS
+  # ==========================================================
+  - id: radio_ambulante
+    nombre: "Radio Ambulante"
+    feed: "https://radioambulante.org/feed"
+    sitio: "https://radioambulante.org"
+    temas: [ideas, internacional]
+    tipo: podcast
+    idioma: es
+    region: latam
+    volumen: bajo
+    resumir: false
+    porque: "Crónica sonora latinoamericana. No tiene equivalente."
+
+  - id: dwarkesh
+    nombre: "Dwarkesh Podcast"
+    feed: "https://www.dwarkesh.com/feed"
+    sitio: "https://www.dwarkesh.com"
+    temas: [ia, ideas]
+    tipo: podcast
+    idioma: en
+    volumen: bajo
+    resumir: false
+    porque: "Entrevistas largas y bien preparadas con quienes construyen la IA."

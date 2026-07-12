@@ -21,26 +21,30 @@ h1{font-size:17px;letter-spacing:.14em;text-transform:uppercase;font-weight:600}
 #btn-ajustes{color:var(--dim);border:1px solid var(--line);border-radius:20px;padding:6px 13px;font-size:12px;flex:none}
 #btn-ajustes:hover{color:var(--tx);border-color:var(--dim)}
 
-nav{display:flex;gap:6px;overflow-x:auto;padding:10px 18px;border-bottom:1px solid var(--line);-webkit-overflow-scrolling:touch;scrollbar-width:none}
-nav::-webkit-scrollbar{display:none}
-nav a{color:var(--dim);text-decoration:none;font-size:12px;white-space:nowrap;padding:5px 11px;border:1px solid var(--line);border-radius:20px}
-nav a:hover{color:var(--tx);border-color:var(--dim)}
-nav a b{color:var(--tx);font-weight:600}
+.filtros{display:flex;gap:6px;overflow-x:auto;padding:8px 18px 0;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+.filtros::-webkit-scrollbar{display:none}
+.filtros:last-of-type{padding-bottom:10px;border-bottom:1px solid var(--line)}
+.chip{color:var(--dim);font-size:12px;white-space:nowrap;padding:5px 11px;border:1px solid var(--line);border-radius:20px;display:inline-flex;align-items:center;gap:6px;flex:none}
+.chip:hover{color:var(--tx);border-color:var(--dim)}
+.chip.on{color:var(--tx);border-color:var(--tx)}
+.chip b{font-weight:600}
+.dot{width:8px;height:8px;border-radius:50%;flex:none}
 
 main{max-width:760px;margin:0 auto;padding:0 18px}
 section{margin-top:34px}
-h2{font-size:12px;letter-spacing:.15em;text-transform:uppercase;color:var(--dim);padding-bottom:9px;border-bottom:1px solid var(--line);margin-bottom:6px;scroll-margin-top:120px}
+h2{font-size:12px;letter-spacing:.15em;text-transform:uppercase;color:var(--dim);padding-bottom:9px;border-bottom:1px solid var(--line);margin-bottom:6px;scroll-margin-top:150px;display:flex;align-items:center;gap:8px}
 article{padding:14px 0;border-bottom:1px solid var(--line);display:flex;gap:12px;align-items:flex-start}
 .cuerpo{flex:1;min-width:0}
 article a.tit{color:var(--tx);text-decoration:none;font-weight:600;font-size:15.5px;line-height:1.4;display:block}
 article a.tit:hover{color:var(--hot)}
 .sum{color:var(--dim);font-size:14px;margin-top:5px}
 .tags{margin-top:7px;font-size:11px;color:var(--dim);display:flex;gap:9px;flex-wrap:wrap;align-items:center}
-.src{color:var(--dim);display:inline-flex;align-items:center;gap:5px;padding:0;border-radius:4px}
+.src{color:var(--dim);display:inline-flex;align-items:center;gap:5px;padding:0}
 .src:hover{color:var(--tx);text-decoration:underline dotted}
 .ico{width:14px;height:14px;border-radius:3px;background:var(--line);flex:none}
 .hot{color:var(--hot);font-weight:600}
-.chip-tipo{border:1px solid var(--line);border-radius:4px;padding:0 5px}
+.chip-mini{border:1px solid var(--line);border-radius:4px;padding:0 5px}
+.postura{border:1px dotted var(--dim);border-radius:4px;padding:0 5px;font-style:italic}
 .dupes{font-size:11px;color:var(--dim);margin-top:5px}
 .dupes a{color:var(--dim);text-decoration:underline}
 .thumb{width:92px;height:64px;object-fit:cover;border-radius:6px;background:var(--card);flex:none;margin-top:2px}
@@ -52,24 +56,24 @@ footer{text-align:center;color:var(--dim);font-size:12px;margin-top:44px}
 #panel.on{display:block}
 .panel-in{max-width:560px;margin:0 auto}
 #panel h2{border:none;color:var(--tx);font-size:19px;text-transform:none;letter-spacing:0;margin-bottom:6px;padding:0}
+#panel h3{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--dim);margin:26px 0 10px}
 #panel .sub{color:var(--dim);font-size:13px;margin-bottom:22px}
-.sec-card{background:var(--card);border:1px solid var(--line);border-radius:10px;margin-bottom:10px;overflow:hidden}
-.sec-card.on{border-color:var(--hot)}
-.sec-head{display:flex;align-items:center;gap:11px;width:100%;padding:13px 14px;text-align:left}
-.marca{width:20px;height:20px;border-radius:6px;border:1.5px solid var(--dim);flex:none;display:flex;align-items:center;justify-content:center;font-size:13px;color:#111}
-.sec-card.on .marca{background:var(--hot);border-color:var(--hot)}
-.sec-nom{flex:1;min-width:0;font-weight:600;font-size:14.5px}
-.sec-n{color:var(--dim);font-size:11.5px;font-weight:400;flex:none}
-.sec-card details{border-top:1px solid var(--line)}
-.sec-card summary{color:var(--dim);font-size:12px;padding:9px 14px;cursor:pointer;list-style:none}
-.sec-card summary::-webkit-details-marker{display:none}
-.sec-card summary:before{content:"▸ "}
-.sec-card details[open] summary:before{content:"▾ "}
-.fte{display:flex;align-items:center;gap:9px;padding:7px 14px;font-size:13px}
-.fte img{width:15px;height:15px;border-radius:3px;background:var(--line);flex:none}
-.fte span{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.fte.off span{color:var(--dim);text-decoration:line-through}
-.sw{width:34px;height:20px;border-radius:20px;background:var(--line);position:relative;flex:none;transition:.15s}
+.paq{background:var(--card);border:1px solid var(--line);border-radius:10px;margin-bottom:10px;width:100%;text-align:left;padding:14px;display:flex;gap:12px;align-items:flex-start}
+.paq.on{border-color:var(--hot)}
+.marca{width:20px;height:20px;border-radius:6px;border:1.5px solid var(--dim);flex:none;display:flex;align-items:center;justify-content:center;font-size:13px;color:#111;margin-top:1px}
+.paq.on .marca{background:var(--hot);border-color:var(--hot)}
+.paq-tx{flex:1;min-width:0}
+.paq-tx b{font-size:14.5px;display:block}
+.paq-tx p{color:var(--dim);font-size:12.5px;margin-top:3px}
+.paq-meta{color:var(--dim);font-size:11px;margin-top:7px;display:flex;gap:5px;align-items:center;flex-wrap:wrap}
+.fte{display:flex;align-items:flex-start;gap:9px;padding:10px 2px;font-size:13px;border-bottom:1px solid var(--line)}
+.fte img{width:15px;height:15px;border-radius:3px;background:var(--line);flex:none;margin-top:2px}
+.fte-tx{flex:1;min-width:0}
+.fte-tx b{font-weight:600;display:block}
+.fte-tx .fmeta{color:var(--dim);font-size:11px;margin-top:1px}
+.fte-tx .porque{color:var(--dim);font-size:11.5px;margin-top:3px;font-style:italic}
+.fte.off .fte-tx b{color:var(--dim);text-decoration:line-through}
+.sw{width:34px;height:20px;border-radius:20px;background:var(--line);position:relative;flex:none;margin-top:4px;transition:.15s}
 .sw:after{content:"";position:absolute;top:2px;left:2px;width:16px;height:16px;border-radius:50%;background:var(--dim);transition:.15s}
 .fte:not(.off) .sw{background:var(--hot)}
 .fte:not(.off) .sw:after{left:16px;background:#111}
@@ -84,14 +88,15 @@ footer{text-align:center;color:var(--dim);font-size:12px;margin-top:44px}
   <div id="hdr-tx"><h1>Lector</h1><div class="meta" id="hdr-meta">Cargando…</div></div>
   <button id="btn-ajustes">Ajustes</button>
 </header>
-<nav id="nav"></nav>
+<div class="filtros" id="f-temas"></div>
+<div class="filtros" id="f-tipos"></div>
 <main id="main"><div class="vacio">Cargando datos…</div></main>
 
 <div id="panel">
   <div class="panel-in">
     <h2 id="panel-tit"></h2>
     <p class="sub" id="panel-sub"></p>
-    <div id="panel-secs"></div>
+    <div id="panel-cuerpo"></div>
   </div>
   <div id="panel-pie"><button id="panel-ok"></button></div>
 </div>
@@ -99,8 +104,14 @@ footer{text-align:center;color:var(--dim);font-size:12px;margin-top:44px}
 <script>
 'use strict';
 const LS = 'lector.prefs';
-let D = null;   // datos.json
-let P = null;   // preferencias del usuario (localStorage)
+const MIN_RELEVANCIA = 4;   // corte de ruido para fuentes resumidas (0-4 = ruido)
+const MAX_POR_MEDIO = 5;    // tope de notas por medio dentro de un tema
+
+let D = null;               // datos.json
+let P = null;               // preferencias del usuario (localStorage)
+let filtroTema = null;      // filtros del muro (efimeros, no se guardan)
+let filtroTipo = null;
+let TEMAS, FUENTES, TIPONOM;
 
 const esc = s => String(s ?? '').replace(/[&<>"']/g,
   c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -113,9 +124,9 @@ const favicon = dom => dom
 function cargarPrefs() {
   try {
     const p = JSON.parse(localStorage.getItem(LS));
-    if (p && p.v === 1) return p;
+    if (p && p.v === 2) return p;
   } catch (e) {}
-  return { v: 1, secciones: [], fuentesOcultas: {}, onboarded: false };
+  return { v: 2, paquetes: [], fuentesOcultas: [], onboarded: false };
 }
 const guardarPrefs = () => localStorage.setItem(LS, JSON.stringify(P));
 
@@ -130,52 +141,92 @@ function cuando(iso) {
   return t.toLocaleDateString('es-MX', { day: 'numeric', month: 'short' });
 }
 const minutos = seg => `${Math.max(1, Math.round(seg / 60))} min`;
-const nombreFuente = (sec, fid) =>
-  (sec.fuentes.find(f => f.id === fid) || {}).nombre || fid;
+
+// ---------- el paquete es una CONSULTA sobre el catalogo, no una lista fija
+const cumpleConsulta = (f, paq) =>
+  paq.tipos.includes(f.tipo) && f.temas.some(t => paq.temas.includes(t));
+
+function fuentesActivas() {
+  const ids = new Set();
+  for (const pid of P.paquetes) {
+    const paq = D.paquetes.find(p => p.id === pid);
+    if (!paq) continue;
+    for (const f of D.fuentes) if (cumpleConsulta(f, paq)) ids.add(f.id);
+  }
+  for (const oc of P.fuentesOcultas) ids.delete(oc);
+  return ids;
+}
+// temas visibles = los que PIDIERON tus paquetes (no todos los temas de las
+// fuentes arrastradas: el_financiero entra por mexico, no te suscribe a negocios)
+function temasActivos(activas) {
+  const pedidos = new Set();
+  for (const pid of P.paquetes) {
+    const paq = D.paquetes.find(p => p.id === pid);
+    if (paq) paq.temas.forEach(t => pedidos.add(t));
+  }
+  return D.temas.filter(t => pedidos.has(t.id)
+    && [...activas].some(id => FUENTES.get(id).temas.includes(t.id)));
+}
+const tiposActivos = activas =>
+  D.tipos.filter(t => [...activas].some(id => FUENTES.get(id).tipo === t.id));
 
 // ---------- seleccion + agrupado (todo en el navegador)
-function gruposDeSeccion(sec) {
-  const ocultas = new Set(P.fuentesOcultas[sec.id] || []);
-  let arts = D.articulos.filter(a => a.seccion === sec.id && !ocultas.has(a.fuente));
-  if (sec.resumida && sec.defaults.min_relevancia)
-    arts = arts.filter(a => (a.relevancia || 0) >= sec.defaults.min_relevancia);
+// score: los resumidos usan su importancia; los no resumidos (longform,
+// podcasts) flotan neutrales a 5 y se ordenan entre si por fecha.
+const score = a => FUENTES.get(a.fuente).resumida ? (a.relevancia || 0) : 5;
 
-  // Duplicados: se agrupan por cluster; el lider se decide AQUI, despues de
-  // filtrar, porque puede cambiar si el usuario oculto la fuente del lider.
+function gruposDeTema(temaId, activas, exclusivo) {
+  const temasOn = new Set(temasActivos(activas).map(t => t.id));
+  const arts = D.articulos.filter(a => {
+    const f = FUENTES.get(a.fuente);
+    if (!f || !activas.has(f.id)) return false;
+    if (!f.temas.includes(temaId)) return false;
+    if (filtroTipo && f.tipo !== filtroTipo) return false;
+    if (f.resumida && (a.relevancia || 0) < MIN_RELEVANCIA) return false;
+    if (exclusivo) {
+      // sin filtro de tema, cada articulo aparece solo bajo el primer
+      // tema activo de su fuente (el_financiero no se duplica en
+      // mexico Y negocios)
+      const primero = f.temas.find(t => temasOn.has(t));
+      if (primero !== temaId) return false;
+    }
+    return true;
+  });
+
+  // Duplicados: el lider se decide AQUI, despues de filtrar, porque puede
+  // cambiar si el usuario oculto la fuente del lider.
   const porCluster = {};
   for (const a of arts) (porCluster[a.cluster] ??= []).push(a);
   let grupos = Object.values(porCluster);
   for (const g of grupos)
-    g.sort((x, y) => (y.relevancia || 0) - (x.relevancia || 0)
+    g.sort((x, y) => score(y) - score(x)
       || String(y.publicado).localeCompare(String(x.publicado)));
+  grupos.sort((a, b) => score(b[0]) - score(a[0])
+    || String(b[0].publicado).localeCompare(String(a[0].publicado)));
 
-  grupos.sort((a, b) => sec.resumida
-    ? ((b[0].relevancia || 0) - (a[0].relevancia || 0)
-       || String(b[0].publicado).localeCompare(String(a[0].publicado)))
-    : String(b[0].publicado).localeCompare(String(a[0].publicado)));
-
-  // Tope por medio: evita que un medio prolifico inunde la seccion
-  const tope = sec.defaults.max_por_fuente;
-  if (tope) {
-    const vistos = {};
-    grupos = grupos.filter(g => {
-      const k = g[0].medio || g[0].fuente;
-      vistos[k] = (vistos[k] || 0) + 1;
-      return vistos[k] <= tope;
-    });
-  }
-  return grupos;
+  // Tope por medio: evita que un medio prolifico inunde el tema
+  const vistos = {};
+  return grupos.filter(g => {
+    const k = g[0].medio || g[0].fuente;
+    vistos[k] = (vistos[k] || 0) + 1;
+    return vistos[k] <= MAX_POR_MEDIO;
+  });
 }
 
-function htmlArticulo(sec, grupo) {
+function htmlArticulo(grupo) {
   const a = grupo[0];
-  const hot = (a.relevancia || 0) >= 8 ? ' <span class="hot">● alta</span>' : '';
+  const f = FUENTES.get(a.fuente);
+  const hot = (f.resumida && (a.relevancia || 0) >= 8)
+    ? ' <span class="hot">● alta</span>' : '';
   const tag = a.etiqueta ? `<span>${esc(a.etiqueta)}</span>` : '';
   const sum = a.resumen ? `<div class="sum">${esc(a.resumen)}</div>` : '';
-  const tipo = a.tipo === 'youtube' ? '<span class="chip-tipo">▶ video</span>'
-    : a.tipo === 'podcast'
-      ? `<span class="chip-tipo">🎧${a.duracion ? ' ' + minutos(a.duracion) : ''}</span>` : '';
-  // onerror: varios medios bloquean hotlinking; mejor sin thumb que una caja rota
+  const chipTipo = f.tipo === 'video' ? '<span class="chip-mini">▶ video</span>'
+    : f.tipo === 'podcast'
+      ? `<span class="chip-mini">🎧${a.duracion ? ' ' + minutos(a.duracion) : ''}</span>`
+      : f.tipo !== 'medio'
+        ? `<span class="chip-mini">${esc(TIPONOM.get(f.tipo) || f.tipo).toLowerCase()}</span>` : '';
+  // postura declarada, no "objetividad": ver CATALOGO.md
+  const postura = f.postura ? `<span class="postura">${esc(f.postura)}</span>` : '';
   const thumb = a.imagen
     ? `<img class="thumb" loading="lazy" alt="" src="${esc(a.imagen)}" onerror="this.remove()">` : '';
 
@@ -190,9 +241,9 @@ function htmlArticulo(sec, grupo) {
     <div class="cuerpo">
       <a class="tit" href="${esc(a.url)}" target="_blank" rel="noopener">${esc(a.titulo)}</a>${sum}
       <div class="tags">
-        <button class="src" data-sec="${esc(sec.id)}" data-fte="${esc(a.fuente)}"
+        <button class="src" data-fte="${esc(a.fuente)}"
           title="Ocultar esta fuente">${favicon(a.dominio)}${esc(a.medio || a.fuente)}</button>
-        ${tipo}${tag}${hot}<span>${cuando(a.publicado)}</span>
+        ${chipTipo}${postura}${tag}${hot}<span>${cuando(a.publicado)}</span>
       </div>${dupes}
     </div>${thumb}
   </article>`;
@@ -200,42 +251,62 @@ function htmlArticulo(sec, grupo) {
 
 // ---------- render principal
 function render() {
-  const secs = D.secciones.filter(s => P.secciones.includes(s.id));
-  let total = 0;
-  const navH = [], bloques = [];
+  const activas = fuentesActivas();
+  const temas = temasActivos(activas);
+  const tipos = tiposActivos(activas);
+  if (filtroTema && !temas.some(t => t.id === filtroTema)) filtroTema = null;
+  if (filtroTipo && !tipos.some(t => t.id === filtroTipo)) filtroTipo = null;
 
-  for (const sec of secs) {
-    const grupos = gruposDeSeccion(sec);
+  // barra 1: filtro por TEMA · barra 2: filtro por TIPO (se combinan)
+  $('f-temas').innerHTML = [`<button class="chip ${!filtroTema ? 'on' : ''}" data-tema="">Todo</button>`]
+    .concat(temas.map(t =>
+      `<button class="chip ${filtroTema === t.id ? 'on' : ''}" data-tema="${esc(t.id)}">
+        <span class="dot" style="background:${esc(t.color)}"></span>${esc(t.nombre)}</button>`))
+    .join('');
+  $('f-tipos').innerHTML = [`<button class="chip ${!filtroTipo ? 'on' : ''}" data-tipo="">Todo tipo</button>`]
+    .concat(tipos.map(t =>
+      `<button class="chip ${filtroTipo === t.id ? 'on' : ''}" data-tipo="${esc(t.id)}">${esc(t.nombre)}</button>`))
+    .join('');
+
+  let total = 0;
+  const bloques = [];
+  const aMostrar = filtroTema ? temas.filter(t => t.id === filtroTema) : temas;
+  for (const tema of aMostrar) {
+    const grupos = gruposDeTema(tema.id, activas, !filtroTema);
     if (!grupos.length) continue;
     total += grupos.length;
-    navH.push(`<a href="#${esc(sec.id)}">${esc(sec.nombre)} <b>${grupos.length}</b></a>`);
-    bloques.push(`<section id="${esc(sec.id)}">
-      <h2>${esc(sec.nombre)} (${grupos.length})</h2>
-      ${grupos.map(g => htmlArticulo(sec, g)).join('')}
+    bloques.push(`<section id="${esc(tema.id)}">
+      <h2><span class="dot" style="background:${esc(tema.color)}"></span>${esc(tema.nombre)} (${grupos.length})</h2>
+      ${grupos.map(htmlArticulo).join('')}
     </section>`);
   }
 
-  $('nav').innerHTML = navH.join('');
-  $('hdr-meta').textContent =
-    `${total} historias · actualizado ${cuando(D.generado)}`;
+  $('hdr-meta').textContent = `${total} historias · actualizado ${cuando(D.generado)}`;
   $('main').innerHTML = bloques.join('')
-    || `<div class="vacio">${secs.length
-        ? 'Nada nuevo en tus secciones. Vuelve más tarde o revisa Ajustes.'
-        : 'No tienes secciones elegidas. Abre Ajustes para escoger tus intereses.'}</div>`;
+    || `<div class="vacio">${P.paquetes.length
+        ? 'Nada con estos filtros. Prueba con "Todo", o revisa Ajustes.'
+        : 'No tienes paquetes elegidos. Abre Ajustes para escoger.'}</div>`;
   $('main').insertAdjacentHTML('beforeend',
-    '<footer>Lector · los datos se regeneran cada mañana</footer>');
+    '<footer>Lector · lee menos, entérate igual</footer>');
 }
 
-// Ocultar fuente con un toque en la etiqueta de la fuente
+// filtros del muro
+$('f-temas').addEventListener('click', e => {
+  const c = e.target.closest('.chip'); if (!c) return;
+  filtroTema = c.dataset.tema || null; render();
+});
+$('f-tipos').addEventListener('click', e => {
+  const c = e.target.closest('.chip'); if (!c) return;
+  filtroTipo = c.dataset.tipo || null; render();
+});
+
+// Ocultar fuente con un toque en su etiqueta (global, en todos los temas)
 $('main').addEventListener('click', e => {
   const btn = e.target.closest('.src');
   if (!btn) return;
-  const sec = D.secciones.find(s => s.id === btn.dataset.sec);
-  const nom = nombreFuente(sec, btn.dataset.fte);
-  if (!confirm(`¿Ocultar "${nom}" en ${sec.nombre}?\nPuedes reactivarla en Ajustes.`)) return;
-  (P.fuentesOcultas[sec.id] ??= []);
-  if (!P.fuentesOcultas[sec.id].includes(btn.dataset.fte))
-    P.fuentesOcultas[sec.id].push(btn.dataset.fte);
+  const f = FUENTES.get(btn.dataset.fte);
+  if (!confirm(`¿Ocultar "${f.nombre}"?\nPuedes reactivarla en Ajustes.`)) return;
+  if (!P.fuentesOcultas.includes(f.id)) P.fuentesOcultas.push(f.id);
   guardarPrefs();
   render();
 });
@@ -243,61 +314,79 @@ $('main').addEventListener('click', e => {
 // ---------- panel: onboarding y ajustes comparten UI
 let onboarding = false;
 
-function pintarPanel() {
-  $('panel-secs').innerHTML = D.secciones.map(sec => {
-    const on = P.secciones.includes(sec.id);
-    const ocultas = new Set(P.fuentesOcultas[sec.id] || []);
-    const fuentes = sec.fuentes.map(f => `
-      <div class="fte ${ocultas.has(f.id) ? 'off' : ''}" data-sec="${esc(sec.id)}" data-fte="${esc(f.id)}">
-        ${favicon(f.dominio)}<span>${esc(f.nombre)}</span><span class="sw"></span>
-      </div>`).join('');
-    return `<div class="sec-card ${on ? 'on' : ''}" data-sec="${esc(sec.id)}">
-      <button class="sec-head">
-        <span class="marca">${on ? '✓' : ''}</span>
-        <span class="sec-nom">${esc(sec.nombre)}</span>
-        <span class="sec-n">${sec.fuentes.length} fuentes</span>
-      </button>
-      ${on ? `<details><summary>gestionar fuentes</summary>${fuentes}</details>` : ''}
-    </div>`;
+function htmlPaquete(paq) {
+  const on = P.paquetes.includes(paq.id);
+  const n = D.fuentes.filter(f => cumpleConsulta(f, paq)).length;
+  const dots = paq.temas.map(tid => {
+    const t = TEMAS.get(tid);
+    return t ? `<span class="dot" style="background:${esc(t.color)}" title="${esc(t.nombre)}"></span>` : '';
   }).join('');
-  $('panel-ok').disabled = onboarding && !P.secciones.length;
+  const tipos = paq.tipos.map(t => (TIPONOM.get(t) || t).toLowerCase()).join(' + ');
+  return `<button class="paq ${on ? 'on' : ''}" data-paq="${esc(paq.id)}">
+    <span class="marca">${on ? '✓' : ''}</span>
+    <span class="paq-tx"><b>${esc(paq.nombre)}</b><p>${esc(paq.descripcion)}</p>
+      <span class="paq-meta">${dots} ${esc(tipos)} · ${n} fuentes hoy</span>
+    </span>
+  </button>`;
+}
+
+function pintarPanel() {
+  let html = D.paquetes.map(htmlPaquete).join('');
+
+  if (!onboarding) {
+    // gestion de fuentes: la suscripcion resuelta HOY por tus paquetes,
+    // mas las que hayas ocultado (para poder reactivarlas)
+    const enPaquetes = new Set();
+    for (const pid of P.paquetes) {
+      const paq = D.paquetes.find(p => p.id === pid);
+      if (paq) for (const f of D.fuentes) if (cumpleConsulta(f, paq)) enPaquetes.add(f.id);
+    }
+    for (const oc of P.fuentesOcultas) enPaquetes.add(oc);
+    const lista = D.fuentes.filter(f => enPaquetes.has(f.id));
+    if (lista.length) {
+      html += `<h3>Tus fuentes (${lista.length})</h3>`;
+      html += lista.map(f => {
+        const off = P.fuentesOcultas.includes(f.id);
+        const temas = f.temas.map(t => TEMAS.get(t)?.nombre || t).join(', ');
+        const meta = [TIPONOM.get(f.tipo) || f.tipo, temas, f.postura].filter(Boolean).join(' · ');
+        return `<div class="fte ${off ? 'off' : ''}" data-fte="${esc(f.id)}">
+          ${favicon(f.dominio)}
+          <span class="fte-tx"><b>${esc(f.nombre)}</b>
+            <span class="fmeta">${esc(meta)}</span>
+            ${f.porque ? `<span class="porque">${esc(f.porque)}</span>` : ''}
+          </span><span class="sw"></span>
+        </div>`;
+      }).join('');
+    }
+  }
+  $('panel-cuerpo').innerHTML = html;
+  $('panel-ok').disabled = onboarding && !P.paquetes.length;
 }
 
 function abrirPanel(esOnboarding) {
   onboarding = esOnboarding;
   $('panel-tit').textContent = esOnboarding ? '¿Qué quieres leer?' : 'Ajustes';
   $('panel-sub').textContent = esOnboarding
-    ? 'Elige tus secciones. Todo se guarda solo en este navegador; puedes cambiarlo cuando quieras en Ajustes.'
-    : 'Activa o desactiva secciones, y oculta fuentes dentro de cada una.';
+    ? 'Elige uno o más paquetes. Cada paquete es una consulta viva sobre el catálogo: cuando entren fuentes nuevas que le queden, las verás sin hacer nada. Todo se guarda solo en este navegador.'
+    : 'Activa o desactiva paquetes, y apaga fuentes específicas. El paquete es una consulta: las fuentes nuevas del catálogo entran solas.';
   $('panel-ok').textContent = esOnboarding ? 'Empezar a leer' : 'Listo';
   pintarPanel();
   $('panel').classList.add('on');
 }
 
-$('panel-secs').addEventListener('click', e => {
-  const fte = e.target.closest('.fte');
-  if (fte) {  // toggle de fuente oculta
-    const lista = (P.fuentesOcultas[fte.dataset.sec] ??= []);
-    const i = lista.indexOf(fte.dataset.fte);
-    i >= 0 ? lista.splice(i, 1) : lista.push(fte.dataset.fte);
+$('panel-cuerpo').addEventListener('click', e => {
+  const paq = e.target.closest('.paq');
+  if (paq) {
+    const i = P.paquetes.indexOf(paq.dataset.paq);
+    i >= 0 ? P.paquetes.splice(i, 1) : P.paquetes.push(paq.dataset.paq);
     guardarPrefs();
     pintarPanel();
-    // reabrir el details de esa seccion para no perder el lugar
-    const card = $('panel-secs').querySelector(`.sec-card[data-sec="${CSS.escape(fte.dataset.sec)}"] details`);
-    if (card) card.open = true;
     return;
   }
-  const head = e.target.closest('.sec-head');
-  if (head) {  // toggle de seccion
-    const id = head.closest('.sec-card').dataset.sec;
-    const i = P.secciones.indexOf(id);
-    if (i >= 0) P.secciones.splice(i, 1);
-    else {
-      // insertar respetando el orden del catalogo
-      P.secciones.push(id);
-      const orden = D.secciones.map(s => s.id);
-      P.secciones.sort((a, b) => orden.indexOf(a) - orden.indexOf(b));
-    }
+  const fte = e.target.closest('.fte');
+  if (fte) {
+    const i = P.fuentesOcultas.indexOf(fte.dataset.fte);
+    i >= 0 ? P.fuentesOcultas.splice(i, 1) : P.fuentesOcultas.push(fte.dataset.fte);
     guardarPrefs();
     pintarPanel();
   }
@@ -317,6 +406,7 @@ async function init() {
     const r = await fetch('datos.json', { cache: 'no-store' });
     if (!r.ok) throw new Error('HTTP ' + r.status);
     D = await r.json();
+    if (D.schema !== 2) throw new Error('schema ' + D.schema);
   } catch (e) {
     $('hdr-meta').textContent = 'error';
     $('main').innerHTML = `<div class="vacio">No pude cargar datos.json (${esc(e.message)}).<br>
@@ -324,10 +414,13 @@ async function init() {
       <code>python -m http.server</code></div>`;
     return;
   }
-  // depurar preferencias de secciones/fuentes que ya no existen en el catalogo
-  const ids = new Set(D.secciones.map(s => s.id));
-  P.secciones = P.secciones.filter(id => ids.has(id));
-  for (const k of Object.keys(P.fuentesOcultas)) if (!ids.has(k)) delete P.fuentesOcultas[k];
+  TEMAS = new Map(D.temas.map(t => [t.id, t]));
+  FUENTES = new Map(D.fuentes.map(f => [f.id, f]));
+  TIPONOM = new Map(D.tipos.map(t => [t.id, t.nombre]));
+
+  // depurar preferencias que ya no existen en el catalogo
+  P.paquetes = P.paquetes.filter(id => D.paquetes.some(p => p.id === id));
+  P.fuentesOcultas = P.fuentesOcultas.filter(id => FUENTES.has(id));
 
   if (!P.onboarded) abrirPanel(true);
   else render();

@@ -3,10 +3,10 @@
 diagnostico.py — Caza los feeds de las fuentes que fallaron.
 
 Prueba muchas rutas candidatas contra cada sitio y te imprime el YAML listo
-para pegar en fuentes.yaml con el "feed:" explicito.
+para pegar en catalogo.yaml con el "feed:" explicito.
 
 Uso:
-    python diagnostico.py                 # revisa TODAS las fuentes de fuentes.yaml
+    python diagnostico.py                 # revisa TODAS las fuentes de catalogo.yaml
     python diagnostico.py Gatopardo Forbes   # solo las que coincidan con esos nombres
 """
 
@@ -89,40 +89,39 @@ def buscar(url_sitio):
 
 def main():
     filtros = [a.lower() for a in sys.argv[1:]]
-    config = yaml.safe_load(open("fuentes.yaml", encoding="utf-8"))
+    config = yaml.safe_load(open("catalogo.yaml", encoding="utf-8"))
 
     encontrados, perdidos = [], []
 
-    for seccion in config["secciones"]:
-        for f in seccion["fuentes"]:
-            if f.get("feed"):          # ya tiene feed explicito: no hay nada que buscar
-                continue
-            nombre = f["nombre"]
-            if filtros and not any(x in nombre.lower() for x in filtros):
-                continue
+    for f in config["fuentes"]:
+        if f.get("feed"):          # ya tiene feed explicito: no hay nada que buscar
+            continue
+        nombre = f["nombre"]
+        if filtros and not any(x in nombre.lower() for x in filtros):
+            continue
 
-            print(f"\n> {nombre}  ({f['url']})")
-            res = buscar(f["url"])
-            if res:
-                url, n = res[0]
-                print(f"    OK  {url}   [{n} entradas]")
-                encontrados.append((seccion["nombre"], nombre, url))
-            else:
-                print("    -- sin feed publico")
-                perdidos.append((seccion["nombre"], nombre, f["url"]))
+        print(f"\n> {nombre}  ({f['sitio']})")
+        res = buscar(f["sitio"])
+        if res:
+            url, n = res[0]
+            print(f"    OK  {url}   [{n} entradas]")
+            encontrados.append((f["id"], nombre, url))
+        else:
+            print("    -- sin feed publico")
+            perdidos.append((f["id"], nombre, f["sitio"]))
 
     print("\n" + "=" * 60)
-    print("PEGA ESTO EN fuentes.yaml (reemplaza el 'url:' por el 'feed:')")
+    print("PEGA ESTO EN catalogo.yaml (agrega el 'feed:' a la fuente)")
     print("=" * 60)
-    for sec, nombre, url in encontrados:
-        print(f'\n# [{sec}]\n      - nombre: "{nombre}"\n        feed: "{url}"')
+    for fid, nombre, url in encontrados:
+        print(f'\n# [{fid}] {nombre}\n    feed: "{url}"')
 
     if perdidos:
         print("\n" + "=" * 60)
         print("SIN FEED PUBLICO (bórralas o búscalas a mano)")
         print("=" * 60)
-        for sec, nombre, url in perdidos:
-            print(f"  - {nombre}  [{sec}]  {url}")
+        for fid, nombre, url in perdidos:
+            print(f"  - {nombre}  [{fid}]  {url}")
 
 
 if __name__ == "__main__":
