@@ -334,7 +334,7 @@ ARTICULOS:
 {articulos}"""
 
 
-def procesar_con_claude(con, config, activo=True):
+def procesar_con_claude(con, config, activo=True, marcar_sin_api=False):
     nombres = {s["id"]: s["nombre"] for s in config["secciones"]}
     secciones_resumibles = {s["id"] for s in config["secciones"] if s.get("resumir")}
     if not secciones_resumibles:
@@ -353,10 +353,15 @@ def procesar_con_claude(con, config, activo=True):
         print(f"\nProcesando {len(pendientes)} articulos con Claude...")
 
     if not activo and pendientes:
-        print("  (--sin-claude: se marcan como procesados sin llamar a la API)")
-        con.executemany("UPDATE articulos SET procesado=1, relevancia=5, cluster=id "
-                        "WHERE id=?", [(p[0],) for p in pendientes])
-        con.commit()
+        if marcar_sin_api:
+            print("  (--sin-claude: se marcan como procesados sin llamar a la API)")
+            con.executemany("UPDATE articulos SET procesado=1, relevancia=5, cluster=id "
+                            "WHERE id=?", [(p[0],) for p in pendientes])
+            con.commit()
+        else:
+            # Falta la API key pero NO fue intencional: se dejan pendientes
+            # para que la proxima corrida (ya con key) si los resuma.
+            print("  ! Sin API key: quedan pendientes y se reintentan en la proxima corrida.")
         pendientes = []
 
     if pendientes:
@@ -502,8 +507,9 @@ def main():
         print(f"\n{n} articulos nuevos.")
         usar_claude = not args.sin_claude and os.environ.get("ANTHROPIC_API_KEY")
         if not args.sin_claude and not usar_claude:
-            print("! Falta ANTHROPIC_API_KEY. Corriendo sin Claude.")
-        procesar_con_claude(con, config, activo=bool(usar_claude))
+            print("! Falta ANTHROPIC_API_KEY.")
+        procesar_con_claude(con, config, activo=bool(usar_claude),
+                            marcar_sin_api=args.sin_claude)
 
     exportar_json(con, config, dias=args.dias)
     con.close()
