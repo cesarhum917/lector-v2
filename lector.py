@@ -32,7 +32,7 @@ import re
 import sqlite3
 import time
 from datetime import datetime, timedelta, timezone
-from urllib.parse import urljoin, urlparse
+from urllib.parse import quote, urljoin, urlparse
 
 import feedparser
 import requests
@@ -64,7 +64,30 @@ TIPOS = [
     {"id": "agregador", "nombre": "Agregadores"},
     {"id": "podcast", "nombre": "Podcasts"},
     {"id": "video", "nombre": "Video"},
+    {"id": "alerta", "nombre": "Alertas"},
 ]
+
+# Parametros de Google News por region (para tipo: alerta).
+# NO usamos Google Alerts: requiere login y su feed no se puede construir
+# programaticamente. Google News da lo mismo y si se puede.
+REGIONES_GN = {
+    "mx": ("es-419", "MX", "MX:es-419"),
+    "latam": ("es-419", "MX", "MX:es-419"),
+    "us": ("en-US", "US", "US:en"),
+    "es": ("es", "ES", "ES:es"),
+}
+
+
+def feed_de_alerta(fuente: dict) -> str:
+    """Una alerta es una consulta guardada: el usuario aporta la query y
+    el sistema construye el feed de Google News."""
+    region = fuente.get("region")
+    if region not in REGIONES_GN:
+        # sin region clara, decide el idioma
+        region = "mx" if fuente.get("idioma", "es") == "es" else "us"
+    hl, gl, ceid = REGIONES_GN[region]
+    q = quote(fuente["query"], safe="")
+    return f"https://news.google.com/rss/search?q={q}&hl={hl}&gl={gl}&ceid={ceid}"
 
 
 # ----------------------------------------------------------------------
@@ -250,6 +273,8 @@ def ingestar(con, config) -> int:
         resumible = 1 if fuente.get("resumir") else 0
         feed_url = fuente.get("feed")
 
+        if not feed_url and tipo == "alerta":
+            feed_url = feed_de_alerta(fuente)
         if not feed_url:
             feed_url = descubrir_feed(fuente["sitio"])
             if not feed_url:
@@ -422,18 +447,27 @@ def exportar_json(con, config, dias=3):
 
     fuentes = []
     for f in config["fuentes"]:
-        fuentes.append({
+        ficha = {
             "id": f["id"],
             "nombre": f["nombre"],
-            "dominio": dominio_de(f.get("sitio") or f.get("feed") or ""),
+            "dominio": dominio_de(f.get("sitio") or f.get("feed") or "")
+                       or ("news.google.com" if f["tipo"] == "alerta" else ""),
             "temas": f["temas"],
             "tipo": f["tipo"],
             "idioma": f.get("idioma"),
             "region": f.get("region", "global"),
             "postura": f.get("postura"),
+            "financiamiento": f.get("financiamiento"),
             "resumida": bool(f.get("resumir")),
             "porque": f.get("porque", ""),
-        })
+        }
+        if f["tipo"] == "alerta":
+            # la consulta es visible: una alerta ES su query, y el pool
+            # multiusuario futuro necesita saber quien la creo
+            ficha["query"] = f["query"]
+            if f.get("autor"):
+                ficha["autor"] = f["autor"]
+        fuentes.append(ficha)
     ids_catalogo = {f["id"] for f in fuentes}
 
     filas = con.execute(
@@ -477,6 +511,9 @@ def exportar_json(con, config, dias=3):
         "dias_sin_resumir": max(dias, DIAS_SIN_RESUMIR),
         "temas": config["temas"],
         "tipos": TIPOS,
+        # definiciones del eje financiamiento (quien paga a cada medio);
+        # el frontend las muestra al tocar la etiqueta
+        "financiamientos": config.get("financiamiento", []),
         # Un paquete es una CONSULTA sobre el catalogo (temas x tipos):
         # el frontend lo resuelve en el navegador, asi las fuentes nuevas
         # entran solas a quien eligio el paquete.

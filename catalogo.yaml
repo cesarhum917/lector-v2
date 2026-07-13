@@ -36,6 +36,33 @@ temas:
     color: "#ff9e64"
 
 # ------------------------------------------------------------
+# EJE: financiamiento — la respuesta honesta a "medios objetivos".
+# NO existe el medio "independiente" en abstracto: existe el medio
+# independiente RESPECTO A un poder concreto. La pregunta util no es
+# "¿es objetivo?" sino "¿quien le paga, y a quien NO puede criticar
+# por eso?". Razonamiento completo en CATALOGO.md.
+# ------------------------------------------------------------
+financiamiento:
+  - id: lectores
+    nombre: "Lectores / sin fines de lucro"
+    nota: "No depende de anunciantes ni de acceso oficial. El sesgo es editorial, no comercial."
+  - id: publico_extranjero
+    nombre: "Público extranjero"
+    nota: "Financiado por OTRO estado. Capturado por un poder que a ti no te afecta. Útil justo por eso."
+  - id: fundacion
+    nombre: "Fundación / filantropía"
+    nota: "Sin presión comercial. Revisar la agenda del donante."
+  - id: anuncios
+    nombre: "Publicidad"
+    nota: "Presión comercial. Difícil que critique a sus anunciantes."
+  - id: estatal_local
+    nombre: "Estatal del país que cubre"
+    nota: "Capturado respecto a lo que más te importa. Úsalo como fuente primaria, no como crítica."
+  - id: corporativo
+    nombre: "Grupo corporativo"
+    nota: "Depende del dueño. Puede ser bueno, pero nunca criticará a su matriz."
+
+# ------------------------------------------------------------
 # PAQUETES DE ARRANQUE
 # Un paquete es una CONSULTA sobre el catálogo, no una lista fija.
 # Así, al agregar una fuente nueva, entra sola a quien eligió ese paquete.
