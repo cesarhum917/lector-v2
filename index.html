@@ -141,9 +141,13 @@ function cuando(iso) {
 }
 const minutos = seg => `${Math.max(1, Math.round(seg / 60))} min`;
 
-// ---------- el paquete es una CONSULTA sobre el catalogo, no una lista fija
+// ---------- el paquete es una CONSULTA sobre el catalogo, no una lista fija.
+// Ejes: temas, tipos, financiamiento, idioma. Si un eje se omite = "cualquiera".
 const cumpleConsulta = (f, paq) =>
-  paq.tipos.includes(f.tipo) && f.temas.some(t => paq.temas.includes(t));
+  (!paq.tipos || paq.tipos.includes(f.tipo)) &&
+  (!paq.temas || f.temas.some(t => paq.temas.includes(t))) &&
+  (!paq.idioma || f.idioma === paq.idioma) &&
+  (!paq.financiamiento || paq.financiamiento.includes(f.financiamiento));
 
 function fuentesActivas() {
   const ids = new Set();
@@ -161,7 +165,11 @@ function temasActivos(activas) {
   const pedidos = new Set();
   for (const pid of P.paquetes) {
     const paq = D.paquetes.find(p => p.id === pid);
-    if (paq) paq.temas.forEach(t => pedidos.add(t));
+    if (!paq) continue;
+    if (paq.temas) paq.temas.forEach(t => pedidos.add(t));
+    else  // paquete sin temas (ej. "escuchar"): pide los temas de sus fuentes
+      for (const f of D.fuentes)
+        if (cumpleConsulta(f, paq)) f.temas.forEach(t => pedidos.add(t));
   }
   return D.temas.filter(t => pedidos.has(t.id)
     && [...activas].some(id => FUENTES.get(id).temas.includes(t.id)));
@@ -282,11 +290,12 @@ let onboarding = false;
 function htmlPaquete(paq) {
   const on = P.paquetes.includes(paq.id);
   const n = D.fuentes.filter(f => cumpleConsulta(f, paq)).length;
-  const dots = paq.temas.map(tid => {
+  const dots = (paq.temas || []).map(tid => {
     const t = TEMAS.get(tid);
     return t ? `<span class="dot" style="background:${esc(t.color)}" title="${esc(t.nombre)}"></span>` : '';
   }).join('');
-  const tipos = paq.tipos.map(t => (TIPONOM.get(t) || t).toLowerCase()).join(' + ');
+  const tipos = (paq.tipos || []).map(t => (TIPONOM.get(t) || t).toLowerCase()).join(' + ')
+    || 'todos los tipos';
   return `<button class="paq ${on ? 'on' : ''}" data-paq="${esc(paq.id)}">
     <span class="marca">${on ? '✓' : ''}</span>
     <span class="paq-tx"><b>${esc(paq.nombre)}</b><p>${esc(paq.descripcion)}</p>

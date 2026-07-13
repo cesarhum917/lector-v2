@@ -34,6 +34,18 @@ temas:
   - id: ideas
     nombre: "Ideas y long-form"
     color: "#ff9e64"
+  - id: diseno
+    nombre: "Diseño y empaque"
+    color: "#ff9ecd"
+  - id: comercio_exterior
+    nombre: "Comercio exterior"
+    color: "#2ac3de"
+  - id: apicola
+    nombre: "Apicultura"
+    color: "#e8d477"
+  - id: musica
+    nombre: "Música y producción"
+    color: "#9d7cd8"
 
 # ------------------------------------------------------------
 # EJE: financiamiento — la respuesta honesta a "medios objetivos".
@@ -96,7 +108,31 @@ paquetes:
     nombre: "Vender en Amazon"
     descripcion: "Cambios de política, tarifas y ecommerce en México."
     temas: [negocios]
-    tipos: [medio, voz, video]
+    tipos: [medio, voz, video, alerta, podcast]
+
+  # Un paquete tambien puede filtrar por financiamiento o idioma.
+  # Si omite temas o tipos, significa "cualquiera".
+  - id: prensa_no_capturada
+    nombre: "Prensa no capturada"
+    descripcion: "Medios que no dependen de anunciantes ni del poder que cubren: lectores, fundaciones o públicos extranjeros."
+    tipos: [medio]
+    financiamiento: [lectores, publico_extranjero, fundacion]
+
+  - id: cine_en_espanol
+    nombre: "Cine en español"
+    descripcion: "Crítica y festivales en tu idioma. Cero cartelera."
+    temas: [cine]
+    idioma: es
+
+  - id: escuchar
+    nombre: "Escuchar"
+    descripcion: "Todos los podcasts del catálogo, de crónica a negocios."
+    tipos: [podcast]
+
+  - id: ver
+    nombre: "Ver"
+    descripcion: "Video-ensayo y análisis. YouTube sin el algoritmo de YouTube."
+    tipos: [video]
 
 fuentes:
 
@@ -189,6 +225,7 @@ fuentes:
     sitio: "https://www.technologyreview.com"
     temas: [ia]
     tipo: medio
+    financiamiento: fundacion
     idioma: en
     volumen: medio
     resumir: true
@@ -204,6 +241,7 @@ fuentes:
     sitio: "https://www.animalpolitico.com"
     temas: [mexico]
     tipo: medio
+    financiamiento: lectores
     idioma: es
     region: mx
     postura: critica-gobierno
@@ -218,6 +256,7 @@ fuentes:
     sitio: "https://www.eluniversal.com.mx"
     temas: [mexico]
     tipo: medio
+    financiamiento: anuncios
     idioma: es
     region: mx
     postura: centro
@@ -231,6 +270,7 @@ fuentes:
     sitio: "https://www.elfinanciero.com.mx"
     temas: [mexico, negocios]
     tipo: medio
+    financiamiento: corporativo
     idioma: es
     region: mx
     postura: centro-derecha
@@ -246,6 +286,7 @@ fuentes:
     sitio: "https://aristeguinoticias.com"
     temas: [mexico]
     tipo: medio
+    financiamiento: anuncios
     idioma: es
     region: mx
     postura: critica-gobierno
@@ -259,6 +300,7 @@ fuentes:
     sitio: "https://elpais.com/mexico/"
     temas: [mexico]
     tipo: medio
+    financiamiento: corporativo
     idioma: es
     region: mx
     postura: centro-izquierda
@@ -325,6 +367,7 @@ fuentes:
     sitio: "https://marketing4ecommerce.mx"
     temas: [negocios]
     tipo: medio
+    financiamiento: anuncios
     idioma: es
     region: mx
     volumen: alto
@@ -347,36 +390,13 @@ fuentes:
   # ==========================================================
   # ALIMENTOS / MIEL — aquí la PRIMARIA es lo más valioso
   # ==========================================================
-  - id: gn_miel_fraude
-    nombre: "Miel: adulteración y autenticidad"
-    feed: "https://news.google.com/rss/search?q=miel+(adulteraci%C3%B3n+OR+fraude+OR+autenticidad+OR+pureza)&hl=es-419&gl=MX&ceid=MX:es-419"
-    sitio: "https://news.google.com"
-    temas: [alimentos]
-    tipo: agregador
-    idioma: es
-    region: mx
-    volumen: medio
-    resumir: true
-    porque: "Rastrea el fraude de miel en toda la prensa. Ninguna fuente única lo cubre."
-
-  - id: gn_regulacion
-    nombre: "Regulación alimentaria MX"
-    feed: "https://news.google.com/rss/search?q=(SENASICA+OR+COFEPRIS+OR+%22NOM-051%22+OR+etiquetado)+alimentos&hl=es-419&gl=MX&ceid=MX:es-419"
-    sitio: "https://news.google.com"
-    temas: [alimentos]
-    tipo: agregador
-    idioma: es
-    region: mx
-    volumen: medio
-    resumir: true
-    porque: "Cambios de SENASICA/COFEPRIS/NOM que pueden obligar a rehacer una etiqueta."
-
   - id: food_dive
     nombre: "Food Dive"
     feed: "https://www.fooddive.com/feeds/news/"
     sitio: "https://www.fooddive.com"
     temas: [alimentos, negocios]
     tipo: medio
+    financiamiento: anuncios
     idioma: en
     volumen: medio
     resumir: true
@@ -391,6 +411,7 @@ fuentes:
     sitio: "https://www.newyorker.com"
     temas: [ideas]
     tipo: longform
+    financiamiento: corporativo
     idioma: en
     volumen: medio
     resumir: false
@@ -402,6 +423,7 @@ fuentes:
     sitio: "https://www.propublica.org"
     temas: [ideas]
     tipo: longform
+    financiamiento: fundacion
     idioma: en
     volumen: bajo
     resumir: false
@@ -413,6 +435,7 @@ fuentes:
     sitio: "https://www.quantamagazine.org"
     temas: [ideas]
     tipo: longform
+    financiamiento: fundacion
     idioma: en
     volumen: bajo
     resumir: false
@@ -447,6 +470,7 @@ fuentes:
     sitio: "https://quintoelab.org"
     temas: [ideas, mexico]
     tipo: longform
+    financiamiento: fundacion
     idioma: es
     region: mx
     volumen: bajo
@@ -475,21 +499,11 @@ fuentes:
     sitio: "https://reverseshot.org"
     temas: [cine]
     tipo: longform
+    financiamiento: fundacion
     idioma: en
     volumen: bajo
     resumir: false
     porque: "La mejor crítica cinéfila en inglés. Del Museum of the Moving Image, no de una revista de estrenos."
-
-  - id: mubi_notebook
-    nombre: "MUBI Notebook"
-    feed: "https://mubi.com/notebook/posts.rss"
-    sitio: "https://mubi.com/notebook"
-    temas: [cine]
-    tipo: longform
-    idioma: en
-    volumen: bajo
-    resumir: false
-    porque: "Ensayo de cine y rescates. Escribe sobre lo que no está en cartelera."
 
   - id: senses_of_cinema
     nombre: "Senses of Cinema"
@@ -523,6 +537,7 @@ fuentes:
     sitio: "https://www.lrb.co.uk"
     temas: [libros, ideas]
     tipo: longform
+    financiamiento: lectores
     idioma: en
     volumen: bajo
     resumir: false
@@ -533,10 +548,12 @@ fuentes:
   # ==========================================================
   - id: radio_ambulante
     nombre: "Radio Ambulante"
-    feed: "https://radioambulante.org/feed"
+    # feed del PODCAST (con duraciones); radioambulante.org/feed es el blog
+    feed: "https://www.omnycontent.com/d/playlist/e73c998e-6e60-432f-8610-ae210140c5b1/b3c9b6e7-72ba-45c4-aff9-b1e7012d213b/092b66a8-4329-4183-bb12-b1e7012d216f/podcast.rss"
     sitio: "https://radioambulante.org"
     temas: [ideas, internacional]
     tipo: podcast
+    financiamiento: lectores
     idioma: es
     region: latam
     volumen: bajo
@@ -553,3 +570,777 @@ fuentes:
     volumen: bajo
     resumir: false
     porque: "Entrevistas largas y bien preparadas con quienes construyen la IA."
+
+  # ==========================================================
+  # ALERTAS — consultas guardadas (tipo: alerta). El backend
+  # construye el feed de Google News desde "query" + "region".
+  # ==========================================================
+  - id: alerta_miel_fraude
+    nombre: "Miel: adulteración"
+    tipo: alerta
+    query: 'miel (adulteración OR fraude OR autenticidad OR pureza)'
+    temas: [alimentos, apicola]
+    idioma: es
+    region: mx
+    resumir: true
+    autor: cesar
+    porque: "Vigila el fraude de miel en toda la prensa. Ninguna fuente única lo cubre."
+
+  - id: alerta_regulacion_alimentos
+    nombre: "Regulación alimentaria MX"
+    tipo: alerta
+    query: '(SENASICA OR COFEPRIS OR "NOM-051" OR etiquetado) alimentos'
+    temas: [alimentos]
+    idioma: es
+    region: mx
+    resumir: true
+    autor: cesar
+    porque: "Cambios normativos que pueden obligar a rehacer una etiqueta."
+
+  - id: alerta_amazon_mx
+    nombre: "Amazon México"
+    tipo: alerta
+    query: '"Amazon México" (FBA OR tarifas OR vendedores OR políticas)'
+    temas: [negocios]
+    idioma: es
+    region: mx
+    resumir: true
+    autor: cesar
+    porque: "Cambios de tarifas y política de Amazon MX antes de que te peguen."
+
+  - id: alerta_export_miel
+    nombre: "Exportación de miel"
+    tipo: alerta
+    query: '("miel mexicana" OR "exportación de miel") (Canadá OR "Estados Unidos" OR aranceles OR CFIA OR FDA)'
+    temas: [comercio_exterior, apicola]
+    idioma: es
+    region: mx
+    resumir: true
+    autor: cesar
+    porque: "Vigila los requisitos y aranceles que condicionan la ruta de exportación."
+
+  # ==========================================================
+  # PRENSA NO CAPTURADA — el criterio DW + Drop Site, explícito.
+  # Aquí el eje financiamiento es el protagonista.
+  # ==========================================================
+  - id: drop_site
+    nombre: "Drop Site News"
+    feed: "https://www.dropsitenews.com/feed"
+    sitio: "https://www.dropsitenews.com"
+    temas: [internacional]
+    tipo: medio
+    idioma: en
+    region: global
+    financiamiento: lectores
+    volumen: medio
+    resumir: true
+    max: 8
+    porque: "Adversarial por diseño: vive de lectores, no de acceso oficial. Reporta lo que la prensa con acceso no puede."
+
+  - id: the_intercept
+    nombre: "The Intercept"
+    feed: "https://theintercept.com/feed/"
+    sitio: "https://theintercept.com"
+    temas: [internacional]
+    tipo: medio
+    idioma: en
+    region: us
+    financiamiento: lectores
+    volumen: medio
+    resumir: true
+    max: 6
+    porque: "Investigación sobre seguridad nacional y poder. Sin anunciantes que proteger."
+
+  - id: bellingcat
+    nombre: "Bellingcat"
+    feed: "https://www.bellingcat.com/feed/"
+    sitio: "https://www.bellingcat.com"
+    temas: [internacional]
+    tipo: medio
+    idioma: en
+    region: global
+    financiamiento: fundacion
+    volumen: bajo
+    resumir: true
+    porque: "Investigación de fuente abierta: verifica con evidencia pública, no con fuentes anónimas. Auditable."
+
+  - id: occrp
+    nombre: "OCCRP"
+    feed: "https://www.occrp.org/en/feed"
+    sitio: "https://www.occrp.org"
+    temas: [internacional, mexico]
+    tipo: medio
+    idioma: en
+    region: global
+    financiamiento: fundacion
+    volumen: bajo
+    resumir: true
+    porque: "Red global de investigación sobre crimen organizado y corrupción. Coordina periodistas de decenas de países."
+
+  - id: rest_of_world
+    nombre: "Rest of World"
+    feed: "https://restofworld.org/feed/latest"
+    sitio: "https://restofworld.org"
+    temas: [internacional, ia]
+    tipo: medio
+    idioma: en
+    region: global
+    financiamiento: fundacion
+    volumen: bajo
+    resumir: true
+    porque: "Tecnología fuera de Silicon Valley. Cubre el sur global sin condescendencia. Sin equivalente."
+
+  - id: cuatro_cero_cuatro
+    nombre: "404 Media"
+    feed: "https://www.404media.co/rss/"
+    sitio: "https://www.404media.co"
+    temas: [ia, internacional]
+    tipo: medio
+    idioma: en
+    financiamiento: lectores
+    volumen: medio
+    resumir: true
+    max: 6
+    porque: "Propiedad de sus periodistas. Cubre la cara sucia de la tecnología que la prensa con acceso evita."
+
+  - id: dw_es
+    nombre: "DW Español"
+    # su RSS propio responde vacío; vía Google News
+    feed: "https://news.google.com/rss/search?q=site:dw.com&hl=es-419&gl=MX&ceid=MX:es-419"
+    sitio: "https://www.dw.com/es/actualidad/s-30684"
+    temas: [internacional]
+    tipo: medio
+    idioma: es
+    region: global
+    financiamiento: publico_extranjero
+    volumen: alto
+    resumir: true
+    max: 8
+    porque: "Emisora pública alemana. Justo por ser ajena, puede decir de México y EE.UU. lo que la prensa local normaliza."
+
+  - id: bbc_mundo
+    nombre: "BBC Mundo"
+    feed: "https://feeds.bbci.co.uk/mundo/rss.xml"
+    sitio: "https://www.bbc.com/mundo"
+    temas: [internacional]
+    tipo: medio
+    idioma: es
+    region: global
+    financiamiento: publico_extranjero
+    volumen: alto
+    resumir: true
+    max: 8
+    porque: "Mirada británica sobre América Latina. Estándares de verificación altos, sin intereses locales."
+
+  - id: france24_es
+    nombre: "France 24 Español"
+    feed: "https://www.france24.com/es/rss"
+    sitio: "https://www.france24.com/es/"
+    temas: [internacional]
+    tipo: medio
+    idioma: es
+    region: global
+    financiamiento: publico_extranjero
+    volumen: alto
+    resumir: true
+    max: 6
+    porque: "Tercera mirada extranjera. Cubre África y Medio Oriente mejor que la prensa anglosajona."
+
+  - id: el_faro
+    nombre: "El Faro"
+    # sin RSS público; vía Google News
+    feed: "https://news.google.com/rss/search?q=site:elfaro.net&hl=es-419&gl=MX&ceid=MX:es-419"
+    sitio: "https://elfaro.net"
+    temas: [internacional, mexico]
+    tipo: medio
+    idioma: es
+    region: latam
+    financiamiento: lectores
+    volumen: bajo
+    resumir: true
+    porque: "El mejor periodismo de investigación de Centroamérica. Se exilió antes que ceder. El estándar de la región."
+
+  - id: ojo_publico
+    nombre: "Ojo Público"
+    # sin RSS público; vía Google News
+    feed: "https://news.google.com/rss/search?q=site:ojo-publico.com&hl=es-419&gl=MX&ceid=MX:es-419"
+    sitio: "https://ojo-publico.com"
+    temas: [internacional]
+    tipo: medio
+    idioma: es
+    region: latam
+    financiamiento: fundacion
+    volumen: bajo
+    resumir: true
+    porque: "Investigación peruana con datos. Rastrea corrupción y poder económico regional."
+
+  - id: agencia_publica
+    nombre: "Agência Pública"
+    feed: "https://apublica.org/feed/"
+    sitio: "https://apublica.org"
+    temas: [internacional]
+    tipo: medio
+    idioma: es
+    region: latam
+    financiamiento: fundacion
+    volumen: bajo
+    resumir: true
+    porque: "Investigación brasileña sin fines de lucro. Brasil se cubre poco en español y pesa mucho."
+
+  - id: pie_de_pagina
+    nombre: "Pie de Página"
+    feed: "https://piedepagina.mx/feed/"
+    sitio: "https://piedepagina.mx"
+    temas: [mexico]
+    tipo: medio
+    idioma: es
+    region: mx
+    financiamiento: fundacion
+    volumen: bajo
+    resumir: true
+    porque: "Red de periodistas mexicanos independientes. Cubre territorio y víctimas, no palacio."
+
+  # ==========================================================
+  # CINE EN ESPAÑOL — mismo criterio que el cine en inglés:
+  # crítica, no cartelera. (Correspondencias quedó fuera: el
+  # sitio no responde y Google News no lo indexa.)
+  # ==========================================================
+  - id: caiman_cuadernos
+    nombre: "Caimán Cuadernos de Cine"
+    feed: "https://www.caimanediciones.es/feed/"
+    sitio: "https://www.caimanediciones.es"
+    temas: [cine]
+    tipo: longform
+    idioma: es
+    region: es
+    volumen: bajo
+    resumir: false
+    porque: "La revista de crítica de referencia en español. Heredera de Cahiers en el mundo hispano."
+
+  - id: otros_cines
+    nombre: "Otros Cines"
+    # sin RSS público; vía Google News
+    feed: "https://news.google.com/rss/search?q=site:otroscines.com&hl=es-419&gl=MX&ceid=MX:es-419"
+    sitio: "https://www.otroscines.com"
+    temas: [cine]
+    tipo: medio
+    idioma: es
+    region: latam
+    volumen: alto
+    resumir: true
+    max: 8
+    porque: "El mejor seguimiento de festivales y cine latinoamericano. Diego Batlle cubre lo que la prensa ignora."
+
+  - id: la_fuga
+    nombre: "La Fuga"
+    # sin RSS público; vía Google News
+    feed: "https://news.google.com/rss/search?q=site:lafuga.cl&hl=es-419&gl=MX&ceid=MX:es-419"
+    sitio: "https://lafuga.cl"
+    temas: [cine]
+    tipo: longform
+    idioma: es
+    region: latam
+    volumen: bajo
+    resumir: false
+    porque: "Crítica chilena de fondo, casi ensayo académico. Publica poco y denso."
+
+  - id: cineteca_nacional
+    nombre: "Cineteca Nacional México"
+    # sin RSS público; vía Google News
+    feed: "https://news.google.com/rss/search?q=site:cinetecanacional.net&hl=es-419&gl=MX&ceid=MX:es-419"
+    sitio: "https://www.cinetecanacional.net"
+    temas: [cine]
+    tipo: primaria
+    idioma: es
+    region: mx
+    volumen: bajo
+    resumir: true
+    porque: "Fuente primaria del cine de repertorio en México. Lo que se puede ver, no solo lo que se reseña."
+
+  # ==========================================================
+  # LIBROS — internacional de verdad, no solo el eje EE.UU./RU.
+  # Criterio: literatura en traducción y voces fuera del canon.
+  # ==========================================================
+  - id: asymptote
+    nombre: "Asymptote Journal"
+    # feed del BLOG; la revista no expone RSS
+    feed: "https://www.asymptotejournal.com/blog/feed/"
+    sitio: "https://www.asymptotejournal.com"
+    temas: [libros]
+    tipo: longform
+    idioma: en
+    region: global
+    volumen: bajo
+    resumir: false
+    porque: "Literatura en traducción de todo el mundo. Es LA respuesta a 'libros pero no solo de EE.UU.'"
+
+  - id: eurozine
+    nombre: "Eurozine"
+    feed: "https://www.eurozine.com/feed/"
+    sitio: "https://www.eurozine.com"
+    temas: [libros, ideas]
+    tipo: longform
+    idioma: en
+    region: global
+    volumen: bajo
+    resumir: false
+    porque: "Red de revistas culturales europeas en decenas de idiomas, traducidas al inglés. Sin equivalente."
+
+  - id: asian_review_books
+    nombre: "Asian Review of Books"
+    feed: "https://asianreviewofbooks.com/feed/"
+    sitio: "https://asianreviewofbooks.com"
+    temas: [libros]
+    tipo: longform
+    idioma: en
+    region: global
+    volumen: bajo
+    resumir: false
+    porque: "Reseña libros de Asia que la prensa anglosajona nunca menciona."
+
+  - id: words_without_borders
+    nombre: "Words Without Borders"
+    feed: "https://wordswithoutborders.org/feed/"
+    sitio: "https://wordswithoutborders.org"
+    temas: [libros]
+    tipo: longform
+    idioma: en
+    region: global
+    volumen: bajo
+    resumir: false
+    porque: "Literatura internacional en traducción, con foco en lenguas minorizadas."
+
+  - id: tls
+    nombre: "Times Literary Supplement"
+    # sin RSS público; vía Google News
+    feed: "https://news.google.com/rss/search?q=site:the-tls.com&hl=en-US&gl=US&ceid=US:en"
+    sitio: "https://www.the-tls.com"
+    temas: [libros, ideas]
+    tipo: longform
+    idioma: en
+    region: global
+    volumen: bajo
+    resumir: false
+    porque: "La reseña larga británica, con alcance internacional real, no insular."
+
+  - id: granta
+    nombre: "Granta"
+    # sin RSS público; vía Google News
+    feed: "https://news.google.com/rss/search?q=site:granta.com&hl=en-US&gl=US&ceid=US:en"
+    sitio: "https://granta.com"
+    temas: [libros, ideas]
+    tipo: longform
+    idioma: en
+    region: global
+    volumen: bajo
+    resumir: false
+    porque: "Nueva narrativa internacional. Descubre autores antes de que se traduzcan."
+
+  - id: lalt
+    nombre: "Latin American Literature Today"
+    feed: "https://latinamericanliteraturetoday.org/feed/"
+    sitio: "https://latinamericanliteraturetoday.org"
+    temas: [libros]
+    tipo: longform
+    idioma: en
+    region: latam
+    volumen: bajo
+    resumir: false
+    porque: "Literatura latinoamericana leída desde afuera, bilingüe. Cierra el círculo entre los dos idiomas."
+
+  - id: confabulario
+    nombre: "Confabulario (El Universal)"
+    feed: "https://confabulario.eluniversal.com.mx/feed/"
+    sitio: "https://confabulario.eluniversal.com.mx"
+    temas: [libros, ideas]
+    tipo: longform
+    idioma: es
+    region: mx
+    financiamiento: anuncios
+    volumen: bajo
+    resumir: false
+    porque: "Suplemento cultural mexicano vivo. Reseña lo que se publica aquí, no lo que se traduce."
+
+  - id: la_tempestad
+    nombre: "La Tempestad"
+    feed: "https://www.latempestad.mx/feed/"
+    sitio: "https://www.latempestad.mx"
+    temas: [libros, cine, ideas]
+    tipo: longform
+    idioma: es
+    region: mx
+    volumen: bajo
+    resumir: false
+    porque: "Arte, cine y letras desde México, con criterio contemporáneo y no comercial."
+
+  # ==========================================================
+  # DISEÑO Y EMPAQUE
+  # ==========================================================
+  - id: the_dieline
+    nombre: "The Dieline"
+    feed: "https://thedieline.com/feed/"
+    sitio: "https://thedieline.com"
+    temas: [diseno]
+    tipo: medio
+    idioma: en
+    volumen: medio
+    resumir: true
+    max: 8
+    porque: "Prensa de diseño de empaque. Ve lo que hacen las marcas premium antes que tú."
+
+  - id: brand_new_followup
+    nombre: "Brand New: The Follow-up"
+    # el blog de Brand New es de paga sin RSS; este es el feed oficial
+    # (y gratuito) de su podcast, con el mismo contenido en audio
+    feed: "https://www.underconsideration.com/brandnew/feed/thefollowup"
+    sitio: "https://www.underconsideration.com/brandnew/"
+    temas: [diseno]
+    tipo: podcast
+    idioma: en
+    volumen: medio
+    resumir: false
+    porque: "Crítica de identidad de marca. Enseña a ver por qué un rediseño funciona o falla."
+
+  - id: its_nice_that
+    nombre: "It's Nice That"
+    feed: "http://feeds2.feedburner.com/itsnicethat/SlXC"
+    sitio: "https://www.itsnicethat.com"
+    temas: [diseno]
+    tipo: medio
+    idioma: en
+    volumen: alto
+    resumir: true
+    max: 6
+    porque: "Diseño gráfico y visual. Para nutrir el ojo, no para copiar."
+
+  # ==========================================================
+  # COMERCIO EXTERIOR
+  # ==========================================================
+  - id: secretaria_economia
+    nombre: "Secretaría de Economía"
+    # gob.mx no expone RSS; vía Google News acotado con la frase
+    feed: "https://news.google.com/rss/search?q=site:gob.mx%20%22Secretar%C3%ADa%20de%20Econom%C3%ADa%22&hl=es-419&gl=MX&ceid=MX:es-419"
+    sitio: "https://www.gob.mx/se"
+    temas: [comercio_exterior]
+    tipo: primaria
+    idioma: es
+    region: mx
+    financiamiento: estatal_local
+    volumen: bajo
+    resumir: true
+    porque: "Fuente original de las reglas de comercio exterior mexicano. Sin intermediario."
+
+  # ==========================================================
+  # APICULTURA
+  # (Apinews queda pendiente: el sitio vive pero no expone RSS
+  #  y Google News no lo indexa. Revisar en la próxima poda.)
+  # ==========================================================
+  - id: bee_culture
+    nombre: "Bee Culture"
+    feed: "https://beeculture.com/feed/"
+    sitio: "https://www.beeculture.com"
+    temas: [apicola]
+    tipo: medio
+    idioma: en
+    volumen: bajo
+    resumir: true
+    porque: "Referencia apícola de EE.UU. Sanidad y manejo, para hablar con productores de igual a igual."
+
+  # ==========================================================
+  # MÚSICA Y PRODUCCIÓN
+  # ==========================================================
+  - id: ableton_blog
+    nombre: "Ableton"
+    feed: "https://www.ableton.com/en/blog/feeds/latest/"
+    sitio: "https://www.ableton.com/en/blog/"
+    temas: [musica]
+    tipo: primaria
+    idioma: en
+    volumen: bajo
+    resumir: false
+    porque: "Fuente original: actualizaciones y técnica de producción."
+
+  - id: cdm
+    nombre: "CDM (Create Digital Music)"
+    feed: "https://cdm.link/feed/"
+    sitio: "https://cdm.link"
+    temas: [musica]
+    tipo: voz
+    idioma: en
+    volumen: medio
+    resumir: true
+    porque: "Herramientas y cultura de música electrónica, con criterio y sin publirreportaje."
+
+  # ==========================================================
+  # PODCASTS NUEVOS — feeds resueltos con la API de Apple y
+  # auditados uno por uno (nombre y artista) en la fase 3.
+  # Fuera: Nexos (sin show insignia) y Criterion (no existe
+  # como podcast). Nada producido por MUBI.
+  # ==========================================================
+  - id: pod_el_hilo
+    nombre: "El Hilo"
+    feed: "https://elhilo.audio/feed/podcast"
+    sitio: "https://elhilo.audio"
+    temas: [internacional, mexico]
+    tipo: podcast
+    idioma: es
+    region: latam
+    financiamiento: lectores
+    volumen: bajo
+    resumir: false
+    porque: "Una historia latinoamericana a fondo por semana. De los creadores de Radio Ambulante."
+
+  - id: pod_las_raras
+    nombre: "Las Raras"
+    feed: "https://rss.libsyn.com/shows/571675/destinations/4946660.xml"
+    sitio: "https://lasraraspodcast.com"
+    temas: [ideas]
+    tipo: podcast
+    idioma: es
+    region: latam
+    volumen: bajo
+    resumir: false
+    porque: "Crónica sonora chilena con diseño de sonido de autor. El documental íntimo que la prensa no hace."
+
+  - id: pod_hablemos
+    nombre: "Hablemos, escritoras"
+    feed: "https://feeds.soundcloud.com/users/soundcloud:users:381694787/sounds.rss"
+    sitio: "https://www.hablemosescritoras.com"
+    temas: [libros]
+    tipo: podcast
+    idioma: es
+    region: latam
+    volumen: bajo
+    resumir: false
+    porque: "Archivo vivo de escritoras en español. No existe nada igual en ningún idioma."
+
+  - id: pod_libro_una_hora
+    nombre: "Un Libro Una Hora"
+    feed: "https://fapi-top.prisasd.com/podcast/playser/un_libro_una_hora/itunestfp/podcast.xml"
+    sitio: "https://cadenaser.com/podcast/un-libro-una-hora/"
+    temas: [libros]
+    tipo: podcast
+    idioma: es
+    region: es
+    financiamiento: corporativo
+    volumen: bajo
+    resumir: false
+    porque: "Cada episodio destila un clásico en una hora. Para decidir qué leer completo."
+
+  - id: pod_asi_como_suena
+    nombre: "Así como suena"
+    feed: "https://feeds.simplecast.com/bDacRxP4"
+    sitio: "https://asicomosuena.mx"
+    temas: [mexico, ideas]
+    tipo: podcast
+    idioma: es
+    region: mx
+    volumen: bajo
+    resumir: false
+    porque: "Crónica sonora mexicana: las historias domésticas que la nota diaria no alcanza."
+
+  - id: pod_humo
+    nombre: "Humo"
+    feed: "https://feeds.acast.com/public/shows/657250358321cf00120ae4c7"
+    sitio: "https://lacorrientedelgolfo.mx"
+    temas: [mexico, ideas]
+    tipo: podcast
+    idioma: es
+    region: mx
+    volumen: bajo
+    resumir: false
+    porque: "Narrativa documental mexicana producida con oficio de cine (La Corriente del Golfo)."
+
+  - id: pod_la_advertencia
+    nombre: "La advertencia"
+    feed: "https://feeds.acast.com/public/shows/513976c7-6771-4e1c-b085-2d752b0758e7"
+    sitio: "https://lacorrientedelgolfo.mx"
+    temas: [mexico, ideas]
+    tipo: podcast
+    idioma: es
+    region: mx
+    volumen: bajo
+    resumir: false
+    porque: "Investigación narrativa mexicana; sigue los casos que la nota diaria abandona."
+
+  - id: pod_acquired
+    nombre: "Acquired"
+    feed: "https://feeds.transistor.fm/acquired"
+    sitio: "https://www.acquired.fm"
+    temas: [negocios]
+    tipo: podcast
+    idioma: en
+    volumen: bajo
+    resumir: false
+    porque: "Historia profunda de empresas. Tres horas por episodio, cero relleno."
+
+  - id: pod_cwt
+    nombre: "Conversations with Tyler"
+    feed: "https://rss.libsyn.com/shows/137081/destinations/850607.xml"
+    sitio: "https://conversationswithtyler.com"
+    temas: [ideas, negocios]
+    tipo: podcast
+    idioma: en
+    volumen: bajo
+    resumir: false
+    porque: "El mejor entrevistador vivo por preparación. Pregunta lo que nadie pregunta."
+
+  - id: pod_latent_space
+    nombre: "Latent Space"
+    feed: "https://api.substack.com/feed/podcast/1084089.rss"
+    sitio: "https://www.latent.space"
+    temas: [ia]
+    tipo: podcast
+    idioma: en
+    volumen: bajo
+    resumir: false
+    porque: "IA desde el lado del que construye, no del que especula."
+
+  - id: pod_intercept
+    nombre: "The Intercept Briefing"
+    feed: "https://feeds.acast.com/public/shows/f5b64019-68c3-57d4-b70b-043e63e5cbf6"
+    sitio: "https://theintercept.com/podcasts/"
+    temas: [internacional]
+    tipo: podcast
+    idioma: en
+    financiamiento: lectores
+    volumen: bajo
+    resumir: false
+    porque: "El mismo criterio adversarial de The Intercept, en audio."
+
+  - id: pod_film_comment
+    nombre: "The Film Comment Podcast"
+    feed: "https://feeds.transistor.fm/the-film-comment-podcast"
+    sitio: "https://www.filmcomment.com/blog/category/podcast/"
+    temas: [cine]
+    tipo: podcast
+    idioma: en
+    volumen: bajo
+    resumir: false
+    porque: "Conversación crítica de fondo. Nada de cartelera ni de taquilla."
+
+  - id: pod_lrb
+    nombre: "The LRB Podcast"
+    feed: "https://feeds.megaphone.fm/LRB9987052392"
+    sitio: "https://www.lrb.co.uk/podcasts-and-videos"
+    temas: [libros, ideas]
+    tipo: podcast
+    idioma: en
+    financiamiento: lectores
+    volumen: bajo
+    resumir: false
+    porque: "El ensayo largo en audio. El libro como pretexto para pensar."
+
+  - id: pod_serious_sellers
+    nombre: "Serious Sellers Podcast"
+    feed: "https://feed.podbean.com/helium10/feed.xml"
+    sitio: "https://www.helium10.com/resources/podcast/"
+    temas: [negocios]
+    tipo: podcast
+    idioma: en
+    financiamiento: corporativo
+    volumen: medio
+    resumir: false
+    max: 8
+    porque: "Táctica semanal de Amazon FBA desde Helium 10; lo operativo antes que la teoría."
+
+  - id: pod_search_engine
+    nombre: "Search Engine"
+    feed: "https://rss.amperwave.net/v2/feed/audacynetwork/search-engine"
+    sitio: "https://www.searchengine.show"
+    temas: [ideas]
+    tipo: podcast
+    idioma: en
+    volumen: bajo
+    resumir: false
+    porque: "PJ Vogt responde preguntas raras con reporteo real. El mejor formato de curiosidad que existe."
+
+  - id: pod_rest_history
+    nombre: "The Rest Is History"
+    feed: "https://feeds.megaphone.fm/GLT4787413333"
+    sitio: "https://therestishistory.com"
+    temas: [ideas]
+    tipo: podcast
+    idioma: en
+    volumen: medio
+    resumir: false
+    max: 8
+    porque: "Historia narrada con rigor y humor; el contexto largo detrás de las noticias de hoy."
+
+  # ==========================================================
+  # YOUTUBE — video-ensayo y análisis, no reseñas de estrenos.
+  # Basta el sitio: con el @handle (el channel_id se resuelve solo).
+  # ==========================================================
+  - id: yt_like_stories
+    nombre: "Like Stories of Old"
+    sitio: "https://www.youtube.com/@LikeStoriesofOld"
+    temas: [cine, ideas]
+    tipo: video
+    idioma: en
+    volumen: bajo
+    resumir: false
+    porque: "Video-ensayo filosófico sobre cine. Publica poco y cada pieza es un ensayo real."
+
+  - id: yt_house_of_tabula
+    nombre: "The House of Tabula"
+    # antes The Cinema Cartography; el canal se renombró en el rebrand
+    feed: "https://www.youtube.com/feeds/videos.xml?channel_id=UCL5kBJmBUVFLYBDiSiK1VDw"
+    sitio: "https://www.youtube.com/channel/UCL5kBJmBUVFLYBDiSiK1VDw"
+    temas: [cine]
+    tipo: video
+    idioma: en
+    volumen: bajo
+    resumir: false
+    porque: "Análisis formal: cómo funciona el lenguaje del cine, no de qué trata la película."
+
+  - id: yt_nerdwriter
+    nombre: "Nerdwriter1"
+    sitio: "https://www.youtube.com/@Nerdwriter1"
+    temas: [cine, ideas]
+    tipo: video
+    idioma: en
+    volumen: bajo
+    resumir: false
+    porque: "Video-ensayo de arte y cine. Formó el género."
+
+  - id: yt_ai_explained
+    nombre: "AI Explained"
+    sitio: "https://www.youtube.com/@aiexplained-official"
+    temas: [ia]
+    tipo: video
+    idioma: en
+    volumen: medio
+    resumir: true
+    porque: "Lee los papers y las evaluaciones reales. Sin hype ni pánico."
+
+  - id: yt_yannic
+    nombre: "Yannic Kilcher"
+    sitio: "https://www.youtube.com/@YannicKilcher"
+    temas: [ia]
+    tipo: video
+    idioma: en
+    volumen: bajo
+    resumir: true
+    porque: "Desmenuza papers de IA a nivel técnico. Para entender el cómo, no el qué."
+
+  - id: yt_3blue1brown
+    nombre: "3Blue1Brown"
+    sitio: "https://www.youtube.com/@3blue1brown"
+    temas: [ia, ideas]
+    tipo: video
+    idioma: en
+    volumen: bajo
+    resumir: false
+    porque: "Matemática visual. Sus videos de redes neuronales son la mejor explicación que existe."
+
+  - id: yt_dw_documental
+    nombre: "DW Documental"
+    sitio: "https://www.youtube.com/@DWDocumental"
+    temas: [internacional, ideas]
+    tipo: video
+    idioma: es
+    financiamiento: publico_extranjero
+    volumen: medio
+    resumir: false
+    max: 8
+    porque: "Documental largo en español, gratis. Mismo criterio de DW: ajeno a los poderes que cubre."
