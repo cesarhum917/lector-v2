@@ -101,11 +101,10 @@ footer{text-align:center;color:var(--dim);font-size:12px;margin-top:44px}
   <div id="panel-pie"><button id="panel-ok"></button></div>
 </div>
 
+<script src="motor.js"></script>
 <script>
 'use strict';
 const LS = 'lector.prefs';
-const MIN_RELEVANCIA = 4;   // corte de ruido para fuentes resumidas (0-4 = ruido)
-const MAX_POR_MEDIO = 5;    // tope de notas por medio dentro de un tema
 
 let D = null;               // datos.json
 let P = null;               // preferencias del usuario (localStorage)
@@ -170,46 +169,12 @@ function temasActivos(activas) {
 const tiposActivos = activas =>
   D.tipos.filter(t => [...activas].some(id => FUENTES.get(id).tipo === t.id));
 
-// ---------- seleccion + agrupado (todo en el navegador)
-// score: los resumidos usan su importancia; los no resumidos (longform,
-// podcasts) flotan neutrales a 5 y se ordenan entre si por fecha.
-const score = a => FUENTES.get(a.fuente).resumida ? (a.relevancia || 0) : 5;
-
+// ---------- seleccion + agrupado: vive en motor.js (probado por test_motor.js)
 function gruposDeTema(temaId, activas, exclusivo) {
-  const temasOn = new Set(temasActivos(activas).map(t => t.id));
-  const arts = D.articulos.filter(a => {
-    const f = FUENTES.get(a.fuente);
-    if (!f || !activas.has(f.id)) return false;
-    if (!f.temas.includes(temaId)) return false;
-    if (filtroTipo && f.tipo !== filtroTipo) return false;
-    if (f.resumida && (a.relevancia || 0) < MIN_RELEVANCIA) return false;
-    if (exclusivo) {
-      // sin filtro de tema, cada articulo aparece solo bajo el primer
-      // tema activo de su fuente (el_financiero no se duplica en
-      // mexico Y negocios)
-      const primero = f.temas.find(t => temasOn.has(t));
-      if (primero !== temaId) return false;
-    }
-    return true;
-  });
-
-  // Duplicados: el lider se decide AQUI, despues de filtrar, porque puede
-  // cambiar si el usuario oculto la fuente del lider.
-  const porCluster = {};
-  for (const a of arts) (porCluster[a.cluster] ??= []).push(a);
-  let grupos = Object.values(porCluster);
-  for (const g of grupos)
-    g.sort((x, y) => score(y) - score(x)
-      || String(y.publicado).localeCompare(String(x.publicado)));
-  grupos.sort((a, b) => score(b[0]) - score(a[0])
-    || String(b[0].publicado).localeCompare(String(a[0].publicado)));
-
-  // Tope por medio: evita que un medio prolifico inunde el tema
-  const vistos = {};
-  return grupos.filter(g => {
-    const k = g[0].medio || g[0].fuente;
-    vistos[k] = (vistos[k] || 0) + 1;
-    return vistos[k] <= MAX_POR_MEDIO;
+  return Motor.gruposDeTema({
+    articulos: D.articulos, fuentes: FUENTES, temaId, activas,
+    temasOn: new Set(temasActivos(activas).map(t => t.id)),
+    filtroTipo, exclusivo,
   });
 }
 

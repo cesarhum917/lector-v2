@@ -14,6 +14,8 @@ jobs:
         with:
           python-version: '3.12'
       - run: pip install -r requirements.txt
+      - name: Pruebas del motor
+        run: node test_motor.js
       - name: Generar datos
         run: python lector.py --dias 3
         env:

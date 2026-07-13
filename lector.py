@@ -410,8 +410,15 @@ def procesar_con_claude(con, config, activo=True, marcar_sin_api=False):
 # ----------------------------------------------------------------------
 # EXPORTAR datos.json (catalogo completo + articulos planos)
 # ----------------------------------------------------------------------
+DIAS_SIN_RESUMIR = 14   # ventana larga para resumir:false: longform y podcasts
+                        # publican poco (a veces semanal); con la ventana corta
+                        # desaparecen del sitio la mayoria de los dias
+
+
 def exportar_json(con, config, dias=3):
-    corte = (datetime.now(timezone.utc) - timedelta(days=dias)).isoformat()
+    ahora = datetime.now(timezone.utc)
+    corte = (ahora - timedelta(days=dias)).isoformat()
+    corte_largo = (ahora - timedelta(days=max(dias, DIAS_SIN_RESUMIR))).isoformat()
 
     fuentes = []
     for f in config["fuentes"]:
@@ -431,14 +438,16 @@ def exportar_json(con, config, dias=3):
 
     filas = con.execute(
         "SELECT id, fuente_id, fuente, dominio, tipo, titulo, url, resumen, "
-        "etiqueta, relevancia, cluster, publicado, imagen, duracion "
+        "etiqueta, relevancia, cluster, publicado, imagen, duracion, resumible "
         "FROM articulos WHERE publicado > ? AND procesado = 1 "
-        "ORDER BY publicado DESC", (corte,)).fetchall()
+        "ORDER BY publicado DESC", (corte_largo,)).fetchall()
 
     articulos = []
     for r in filas:
         if r[1] not in ids_catalogo:
             continue  # fuente retirada del catalogo (o del esquema anterior)
+        if r[14] and r[11] <= corte:
+            continue  # resumibles: solo la ventana corta; la larga es para longform/podcasts
         a = {
             "id": r[0],
             "fuente": r[1],
@@ -463,8 +472,9 @@ def exportar_json(con, config, dias=3):
 
     datos = {
         "schema": 2,
-        "generado": datetime.now(timezone.utc).isoformat(),
+        "generado": ahora.isoformat(),
         "dias": dias,
+        "dias_sin_resumir": max(dias, DIAS_SIN_RESUMIR),
         "temas": config["temas"],
         "tipos": TIPOS,
         # Un paquete es una CONSULTA sobre el catalogo (temas x tipos):
