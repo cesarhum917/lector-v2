@@ -194,10 +194,14 @@ def descubrir_feed(url_sitio: str) -> str | None:
 
 
 def _feed_youtube(url: str) -> str | None:
-    """Todo canal de YouTube tiene RSS, pero requiere el channel_id."""
+    """Todo canal de YouTube tiene RSS, pero requiere el channel_id.
+    OJO: el primer "channelId" del HTML puede ser de un canal recomendado,
+    no del canal de la pagina. El canonical y externalId si son propios."""
     try:
         r = requests.get(url, headers=UA, timeout=15)
-        m = re.search(r'"channelId":"(UC[\w-]{22})"', r.text)
+        m = (re.search(r'rel="canonical" href="https://www\.youtube\.com/channel/(UC[\w-]{22})"', r.text)
+             or re.search(r'"externalId":"(UC[\w-]{22})"', r.text)
+             or re.search(r'"channelId":"(UC[\w-]{22})"', r.text))
         if m:
             return f"https://www.youtube.com/feeds/videos.xml?channel_id={m.group(1)}"
     except Exception as e:
