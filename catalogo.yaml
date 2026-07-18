@@ -110,6 +110,12 @@ paquetes:
     temas: [negocios]
     tipos: [medio, voz, video, alerta, podcast]
 
+  - id: internacional
+    nombre: "Internacional"
+    descripcion: "El mundo con miradas cruzadas: públicos extranjeros, investigación independiente y agencias sin intereses locales."
+    temas: [internacional]
+    tipos: [medio, agregador, alerta]
+
   # Un paquete tambien puede filtrar por financiamiento o idioma.
   # Si omite temas o tipos, significa "cualquiera".
   - id: prensa_no_capturada
