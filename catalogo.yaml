@@ -477,6 +477,18 @@ fuentes:
     resumir: false
     porque: "Investigación mexicana de largo aliento. Publica poco porque tarda meses en cada historia."
 
+  - id: nexos
+    nombre: "Nexos"
+    feed: "https://www.nexos.com.mx/feed/"
+    sitio: "https://www.nexos.com.mx"
+    temas: [mexico, ideas]
+    tipo: longform
+    idioma: es
+    region: mx
+    volumen: bajo
+    resumir: false
+    porque: "La revista de ensayo político mexicano de referencia. Debate de ideas, no nota diaria."
+
   - id: anfibia
     nombre: "Revista Anfibia"
     feed: "https://www.revistaanfibia.com/feed/"

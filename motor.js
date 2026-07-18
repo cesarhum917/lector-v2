@@ -33,17 +33,19 @@
    *   activas:    Set de ids de fuentes activas (paquetes - ocultas)
    *   temasOn:    Set de ids de temas visibles (para el modo exclusivo)
    *   filtroTipo: id de tipo o null
+   *   filtroFin:  id de financiamiento o null (tercer eje: quien paga)
    *   exclusivo:  true en la vista "Todo": el articulo aparece solo bajo el
    *               primer tema activo de su fuente, para no duplicarse
    * Devuelve: array de grupos (clusters); cada grupo trae el lider primero.
    */
   function gruposDeTema({ articulos, fuentes, temaId, activas, temasOn,
-                          filtroTipo = null, exclusivo = false }) {
+                          filtroTipo = null, filtroFin = null, exclusivo = false }) {
     const arts = articulos.filter(a => {
       const f = fuentes.get(a.fuente);
       if (!f || !activas.has(f.id)) return false;
       if (!f.temas.includes(temaId)) return false;
       if (filtroTipo && f.tipo !== filtroTipo) return false;
+      if (filtroFin && f.financiamiento !== filtroFin) return false;
       // Regla 1: el corte de relevancia NUNCA toca a los no resumidos.
       if (f.resumida && (a.relevancia || 0) < MIN_RELEVANCIA) return false;
       if (exclusivo) {

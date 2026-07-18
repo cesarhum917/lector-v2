@@ -21,9 +21,9 @@ h1{font-size:17px;letter-spacing:.14em;text-transform:uppercase;font-weight:600}
 #btn-ajustes{color:var(--dim);border:1px solid var(--line);border-radius:20px;padding:6px 13px;font-size:12px;flex:none}
 #btn-ajustes:hover{color:var(--tx);border-color:var(--dim)}
 
+#filtros-wrap{border-bottom:1px solid var(--line);padding-bottom:10px}
 .filtros{display:flex;gap:6px;overflow-x:auto;padding:8px 18px 0;-webkit-overflow-scrolling:touch;scrollbar-width:none}
 .filtros::-webkit-scrollbar{display:none}
-.filtros:last-of-type{padding-bottom:10px;border-bottom:1px solid var(--line)}
 .chip{color:var(--dim);font-size:12px;white-space:nowrap;padding:5px 11px;border:1px solid var(--line);border-radius:20px;display:inline-flex;align-items:center;gap:6px;flex:none}
 .chip:hover{color:var(--tx);border-color:var(--dim)}
 .chip.on{color:var(--tx);border-color:var(--tx)}
@@ -44,7 +44,11 @@ article a.tit:hover{color:var(--hot)}
 .ico{width:14px;height:14px;border-radius:3px;background:var(--line);flex:none}
 .hot{color:var(--hot);font-weight:600}
 .chip-mini{border:1px solid var(--line);border-radius:4px;padding:0 5px}
-.postura{border:1px dotted var(--dim);border-radius:4px;padding:0 5px;font-style:italic}
+.postura,.fin{border:1px dotted var(--dim);border-radius:4px;padding:0 5px;font-style:italic;font-size:inherit;color:inherit}
+.postura:hover,.fin:hover{color:var(--tx);border-color:var(--tx)}
+.vthumb{position:relative;flex:none;margin-top:2px}
+.vthumb .thumb{width:128px;height:72px;margin:0}
+.vthumb i{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:30px;height:30px;border-radius:50%;background:rgba(0,0,0,.6);color:#fff;display:flex;align-items:center;justify-content:center;font-style:normal;font-size:12px;pointer-events:none}
 .dupes{font-size:11px;color:var(--dim);margin-top:5px}
 .dupes a{color:var(--dim);text-decoration:underline}
 .thumb{width:92px;height:64px;object-fit:cover;border-radius:6px;background:var(--card);flex:none;margin-top:2px}
@@ -80,6 +84,13 @@ footer{text-align:center;color:var(--dim);font-size:12px;margin-top:44px}
 #panel-pie{position:fixed;left:0;right:0;bottom:0;background:rgba(15,15,16,.95);backdrop-filter:blur(8px);border-top:1px solid var(--line);padding:14px 18px calc(14px + env(safe-area-inset-bottom))}
 #panel-ok{display:block;max-width:560px;margin:0 auto;width:100%;background:var(--hot);color:#111;font-weight:600;font-size:15px;border-radius:10px;padding:13px}
 #panel-ok:disabled{background:var(--line);color:var(--dim);cursor:default}
+
+/* ---------- nota explicativa (postura / financiamiento) ---------- */
+#nota{position:fixed;left:0;right:0;bottom:0;z-index:30;background:var(--card);border-top:1px solid var(--line);padding:18px 18px calc(20px + env(safe-area-inset-bottom));transform:translateY(105%);transition:.2s;box-shadow:0 -8px 30px rgba(0,0,0,.5)}
+#nota.on{transform:none}
+#nota b{display:block;font-size:14.5px;margin-bottom:5px;max-width:560px;margin-left:auto;margin-right:auto}
+#nota p{color:var(--dim);font-size:13.5px;line-height:1.5;max-width:560px;margin:0 auto}
+#nota .cerrar{position:absolute;top:10px;right:14px;color:var(--dim);font-size:18px;padding:4px 8px}
 </style>
 </head>
 <body>
@@ -88,9 +99,13 @@ footer{text-align:center;color:var(--dim);font-size:12px;margin-top:44px}
   <div id="hdr-tx"><h1>Lector</h1><div class="meta" id="hdr-meta">Cargando…</div></div>
   <button id="btn-ajustes">Ajustes</button>
 </header>
-<div class="filtros" id="f-temas"></div>
-<div class="filtros" id="f-tipos"></div>
+<div id="filtros-wrap">
+  <div class="filtros" id="f-temas"></div>
+  <div class="filtros" id="f-tipos"></div>
+  <div class="filtros" id="f-fin" style="display:none"></div>
+</div>
 <main id="main"><div class="vacio">Cargando datos…</div></main>
+<div id="nota"><button class="cerrar">✕</button><b id="nota-tit"></b><p id="nota-tx"></p></div>
 
 <div id="panel">
   <div class="panel-in">
@@ -110,7 +125,13 @@ let D = null;               // datos.json
 let P = null;               // preferencias del usuario (localStorage)
 let filtroTema = null;      // filtros del muro (efimeros, no se guardan)
 let filtroTipo = null;
-let TEMAS, FUENTES, TIPONOM;
+let filtroFin = null;       // tercer eje: quien paga al medio
+let TEMAS, FUENTES, TIPONOM, FINS;
+
+// etiqueta corta del financiamiento para los chips de las notas
+const FIN_CORTO = { lectores: 'lectores', publico_extranjero: 'público ext.',
+  fundacion: 'fundación', anuncios: 'anuncios', estatal_local: 'estatal',
+  corporativo: 'corporativo' };
 
 const esc = s => String(s ?? '').replace(/[&<>"']/g,
   c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -176,15 +197,26 @@ function temasActivos(activas) {
 }
 const tiposActivos = activas =>
   D.tipos.filter(t => [...activas].some(id => FUENTES.get(id).tipo === t.id));
+const finsActivos = activas =>
+  (D.financiamientos || []).filter(x =>
+    [...activas].some(id => FUENTES.get(id).financiamiento === x.id));
 
 // ---------- seleccion + agrupado: vive en motor.js (probado por test_motor.js)
 function gruposDeTema(temaId, activas, exclusivo) {
   return Motor.gruposDeTema({
     articulos: D.articulos, fuentes: FUENTES, temaId, activas,
     temasOn: new Set(temasActivos(activas).map(t => t.id)),
-    filtroTipo, exclusivo,
+    filtroTipo, filtroFin, exclusivo,
   });
 }
+
+// ---------- nota explicativa (que significa la etiqueta que tocaste)
+function verNota(titulo, texto) {
+  $('nota-tit').textContent = titulo;
+  $('nota-tx').textContent = texto;
+  $('nota').classList.add('on');
+}
+$('nota').addEventListener('click', () => $('nota').classList.remove('on'));
 
 function htmlArticulo(grupo) {
   const a = grupo[0];
@@ -193,15 +225,23 @@ function htmlArticulo(grupo) {
     ? ' <span class="hot">● alta</span>' : '';
   const tag = a.etiqueta ? `<span>${esc(a.etiqueta)}</span>` : '';
   const sum = a.resumen ? `<div class="sum">${esc(a.resumen)}</div>` : '';
-  const chipTipo = f.tipo === 'video' ? '<span class="chip-mini">▶ video</span>'
+  const esVideoConThumb = f.tipo === 'video' && a.imagen;
+  const chipTipo = f.tipo === 'video'
+    ? (esVideoConThumb ? '' : '<span class="chip-mini">▶ video</span>')
     : f.tipo === 'podcast'
-      ? `<span class="chip-mini">🎧${a.duracion ? ' ' + minutos(a.duracion) : ''}</span>`
+      ? `<span class="chip-mini">🎧${a.duracion ? ' ' + minutos(a.duracion) : ' podcast'}</span>`
       : f.tipo !== 'medio'
         ? `<span class="chip-mini">${esc(TIPONOM.get(f.tipo) || f.tipo).toLowerCase()}</span>` : '';
-  // postura declarada, no "objetividad": ver CATALOGO.md
-  const postura = f.postura ? `<span class="postura">${esc(f.postura)}</span>` : '';
+  // postura y financiamiento declarados, no "objetividad" (tocables: explican
+  // que significa la etiqueta). Ver CATALOGO.md.
+  const postura = f.postura
+    ? `<button class="postura" data-fte="${esc(f.id)}" title="¿Qué significa?">${esc(f.postura)}</button>` : '';
+  const fin = f.financiamiento
+    ? `<button class="fin" data-fin="${esc(f.financiamiento)}" title="¿Quién paga este medio?">${esc(FIN_CORTO[f.financiamiento] || f.financiamiento)}</button>` : '';
   const thumb = a.imagen
-    ? `<img class="thumb" loading="lazy" alt="" src="${esc(a.imagen)}" onerror="this.remove()">` : '';
+    ? (esVideoConThumb
+       ? `<span class="vthumb"><img class="thumb" loading="lazy" alt="" src="${esc(a.imagen)}" onerror="this.parentElement.remove()"><i>▶</i></span>`
+       : `<img class="thumb" loading="lazy" alt="" src="${esc(a.imagen)}" onerror="this.remove()">`) : '';
 
   let dupes = '';
   if (grupo.length > 1) {
@@ -216,7 +256,7 @@ function htmlArticulo(grupo) {
       <div class="tags">
         <button class="src" data-fte="${esc(a.fuente)}"
           title="Ocultar esta fuente">${favicon(a.dominio)}${esc(a.medio || a.fuente)}</button>
-        ${chipTipo}${postura}${tag}${hot}<span>${cuando(a.publicado)}</span>
+        ${chipTipo}${postura}${fin}${tag}${hot}<span>${cuando(a.publicado)}</span>
       </div>${dupes}
     </div>${thumb}
   </article>`;
@@ -227,10 +267,12 @@ function render() {
   const activas = fuentesActivas();
   const temas = temasActivos(activas);
   const tipos = tiposActivos(activas);
+  const fins = finsActivos(activas);
   if (filtroTema && !temas.some(t => t.id === filtroTema)) filtroTema = null;
   if (filtroTipo && !tipos.some(t => t.id === filtroTipo)) filtroTipo = null;
+  if (filtroFin && !fins.some(x => x.id === filtroFin)) filtroFin = null;
 
-  // barra 1: filtro por TEMA · barra 2: filtro por TIPO (se combinan)
+  // tres filtros combinables: TEMA x TIPO x QUIEN PAGA
   $('f-temas').innerHTML = [`<button class="chip ${!filtroTema ? 'on' : ''}" data-tema="">Todo</button>`]
     .concat(temas.map(t =>
       `<button class="chip ${filtroTema === t.id ? 'on' : ''}" data-tema="${esc(t.id)}">
@@ -240,6 +282,15 @@ function render() {
     .concat(tipos.map(t =>
       `<button class="chip ${filtroTipo === t.id ? 'on' : ''}" data-tipo="${esc(t.id)}">${esc(t.nombre)}</button>`))
     .join('');
+  // la barra "quien paga" solo aparece si tu suscripcion tiene medios con
+  // financiamiento declarado. Nadie mas deja filtrar prensa por esto.
+  $('f-fin').style.display = fins.length ? '' : 'none';
+  $('f-fin').innerHTML = fins.length
+    ? [`<button class="chip ${!filtroFin ? 'on' : ''}" data-fin="">Quién paga · todos</button>`]
+        .concat(fins.map(x =>
+          `<button class="chip ${filtroFin === x.id ? 'on' : ''}" data-fin="${esc(x.id)}">${esc(x.nombre)}</button>`))
+        .join('')
+    : '';
 
   let total = 0;
   const bloques = [];
@@ -272,9 +323,27 @@ $('f-tipos').addEventListener('click', e => {
   const c = e.target.closest('.chip'); if (!c) return;
   filtroTipo = c.dataset.tipo || null; render();
 });
+$('f-fin').addEventListener('click', e => {
+  const c = e.target.closest('.chip'); if (!c) return;
+  filtroFin = c.dataset.fin || null; render();
+});
 
-// Ocultar fuente con un toque en su etiqueta (global, en todos los temas)
 $('main').addEventListener('click', e => {
+  // etiquetas tocables: explican que significan (CATALOGO.md)
+  const pos = e.target.closest('.postura');
+  if (pos) {
+    const f = FUENTES.get(pos.dataset.fte);
+    verNota(`Postura: ${f.postura}`,
+      `Línea editorial declarada de ${f.nombre}. Es una etiqueta descriptiva, no un juicio de calidad: en temas políticos no hay árbitro neutral, así que la declaramos y tú decides.`);
+    return;
+  }
+  const fin = e.target.closest('.fin');
+  if (fin) {
+    const x = FINS.get(fin.dataset.fin);
+    if (x) verNota(`Financiamiento: ${x.nombre}`, x.nota || '');
+    return;
+  }
+  // Ocultar fuente con un toque en su etiqueta (global, en todos los temas)
   const btn = e.target.closest('.src');
   if (!btn) return;
   const f = FUENTES.get(btn.dataset.fte);
@@ -294,8 +363,12 @@ function htmlPaquete(paq) {
     const t = TEMAS.get(tid);
     return t ? `<span class="dot" style="background:${esc(t.color)}" title="${esc(t.nombre)}"></span>` : '';
   }).join('');
-  const tipos = (paq.tipos || []).map(t => (TIPONOM.get(t) || t).toLowerCase()).join(' + ')
-    || 'todos los tipos';
+  const ejes = [(paq.tipos || []).map(t => (TIPONOM.get(t) || t).toLowerCase()).join(' + ')
+                || 'todos los tipos'];
+  if (paq.financiamiento)
+    ejes.push(paq.financiamiento.map(x => FIN_CORTO[x] || x).join('/'));
+  if (paq.idioma) ejes.push(paq.idioma === 'es' ? 'en español' : 'en inglés');
+  const tipos = ejes.join(' · ');
   return `<button class="paq ${on ? 'on' : ''}" data-paq="${esc(paq.id)}">
     <span class="marca">${on ? '✓' : ''}</span>
     <span class="paq-tx"><b>${esc(paq.nombre)}</b><p>${esc(paq.descripcion)}</p>
@@ -322,7 +395,9 @@ function pintarPanel() {
       html += lista.map(f => {
         const off = P.fuentesOcultas.includes(f.id);
         const temas = f.temas.map(t => TEMAS.get(t)?.nombre || t).join(', ');
-        const meta = [TIPONOM.get(f.tipo) || f.tipo, temas, f.postura].filter(Boolean).join(' · ');
+        const meta = [TIPONOM.get(f.tipo) || f.tipo, temas, f.postura,
+                      f.financiamiento && (FIN_CORTO[f.financiamiento] || f.financiamiento)]
+                     .filter(Boolean).join(' · ');
         return `<div class="fte ${off ? 'off' : ''}" data-fte="${esc(f.id)}">
           ${favicon(f.dominio)}
           <span class="fte-tx"><b>${esc(f.nombre)}</b>
@@ -391,6 +466,7 @@ async function init() {
   TEMAS = new Map(D.temas.map(t => [t.id, t]));
   FUENTES = new Map(D.fuentes.map(f => [f.id, f]));
   TIPONOM = new Map(D.tipos.map(t => [t.id, t.nombre]));
+  FINS = new Map((D.financiamientos || []).map(x => [x.id, x]));
 
   // depurar preferencias que ya no existen en el catalogo
   P.paquetes = P.paquetes.filter(id => D.paquetes.some(p => p.id === id));

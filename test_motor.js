@@ -79,7 +79,22 @@ const lideres = arts => Motor.gruposDeTema({ ...base, articulos: arts }).map(g =
      `el tope por medio (${Motor.MAX_POR_MEDIO}) si aplica a fuentes resumidas`);
 }
 
-// ---------- 5. el cluster agrupa y el lider no resumido no muere por relevancia
+// ---------- 5. filtro por financiamiento (tercer eje)
+{
+  const fts = new Map([
+    ['indep', { id: 'indep', temas: ['int'], tipo: 'medio', resumida: true, financiamiento: 'lectores' }],
+    ['estatal', { id: 'estatal', temas: ['int'], tipo: 'medio', resumida: true, financiamiento: 'publico_extranjero' }],
+    ['sin_dato', { id: 'sin_dato', temas: ['int'], tipo: 'voz', resumida: true, financiamiento: null }],
+  ]);
+  const arts = [art('a', 'indep', 6, 10), art('b', 'estatal', 6, 10), art('c', 'sin_dato', 6, 10)];
+  const ids = Motor.gruposDeTema({ articulos: arts, fuentes: fts, temaId: 'int',
+    activas: new Set(fts.keys()), temasOn: new Set(['int']),
+    filtroFin: 'lectores' }).map(g => g[0].id);
+  ok(ids.length === 1 && ids[0] === 'a',
+     'filtroFin deja solo las fuentes con ese financiamiento (fuera estatales y sin dato)');
+}
+
+// ---------- 6. el cluster agrupa y el lider no resumido no muere por relevancia
 {
   const arts = [
     art('a', 'prensa_x', 7, 10, { cluster: 'misma-noticia' }),
