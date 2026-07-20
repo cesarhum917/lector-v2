@@ -7,8 +7,8 @@
 # ============================================================
 
 temas:
-  - id: ia
-    nombre: "Inteligencia Artificial"
+  - id: ia          # el id no cambia: las prefs guardadas apuntan a el
+    nombre: "IA y tecnología"
     color: "#7aa2f7"
   - id: negocios
     nombre: "Negocios y ecommerce"
@@ -221,6 +221,19 @@ fuentes:
     resumir: true
     max: 10
     porque: "Donde aterriza el open source. Lo que se puede correr uno mismo, no solo lo que se anuncia."
+
+  - id: wired
+    nombre: "WIRED"
+    feed: "https://www.wired.com/feed/rss"
+    sitio: "https://www.wired.com"
+    temas: [ia]
+    tipo: medio
+    financiamiento: corporativo
+    idioma: en
+    volumen: alto
+    resumir: true
+    max: 10
+    porque: "Tech-cultura: cómo la tecnología cambia poder y vida diaria, no la nota de producto."
 
   - id: mit_tech_review
     nombre: "MIT Technology Review"
