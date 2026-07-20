@@ -878,6 +878,33 @@ fuentes:
     resumir: true
     porque: "Fuente primaria del cine de repertorio en México. Lo que se puede ver, no solo lo que se reseña."
 
+  # CINE — el "punto medio": estrenos y qué ver en casa.
+  # Ni TikTok ni tesis.
+  - id: film_stage
+    nombre: "The Film Stage"
+    feed: "https://thefilmstage.com/feed/"
+    sitio: "https://thefilmstage.com"
+    temas: [cine]
+    tipo: medio
+    idioma: en
+    volumen: alto
+    resumir: true
+    max: 8
+    porque: "Estrenos y festivales, más guías de qué ver en streaming. Ni TikTok ni tesis."
+
+  - id: fancine
+    nombre: "Fancine"
+    feed: "https://fancine.substack.com/feed"
+    sitio: "https://fancine.substack.com"
+    temas: [cine]
+    tipo: medio
+    idioma: es
+    region: latam
+    financiamiento: lectores
+    volumen: bajo
+    resumir: true
+    porque: "Substack semanal: 3 pelis para ver en streaming el finde. El punto medio en español."
+
   # ==========================================================
   # LIBROS — internacional de verdad, no solo el eje EE.UU./RU.
   # Criterio: literatura en traducción y voces fuera del canon.
@@ -981,6 +1008,58 @@ fuentes:
     volumen: bajo
     resumir: false
     porque: "Suplemento cultural mexicano vivo. Reseña lo que se publica aquí, no lo que se traduce."
+
+  # (Arcadia quedó fuera: la revista murió en 2020, su dominio no publica
+  #  desde 2019. Tierra Adentro también: el sitio no responde. Si se busca
+  #  Colombia en libros, proponer sustituto en la próxima poda.)
+  - id: rev_universidad
+    nombre: "Revista de la Universidad de México"
+    # sin RSS público; vía Google News
+    feed: "https://news.google.com/rss/search?q=site:revistadelauniversidad.mx&hl=es-419&gl=MX&ceid=MX:es-419"
+    sitio: "https://www.revistadelauniversidad.mx"
+    temas: [libros]
+    tipo: longform
+    idioma: es
+    region: mx
+    volumen: bajo
+    resumir: false
+    porque: "Histórica de la UNAM: literatura y pensamiento con firma."
+
+  - id: este_pais
+    nombre: "Este País"
+    feed: "https://estepais.com/feed/"
+    sitio: "https://estepais.com"
+    temas: [libros]
+    tipo: longform
+    idioma: es
+    region: mx
+    volumen: bajo
+    resumir: false
+    porque: "Ensayo y actualidad; complementa a Nexos sin repetirlo."
+
+  - id: rev_santiago
+    nombre: "Revista Santiago"
+    feed: "https://revistasantiago.cl/feed/"
+    sitio: "https://revistasantiago.cl"
+    temas: [libros]
+    tipo: longform
+    idioma: es
+    region: latam
+    volumen: bajo
+    resumir: false
+    porque: "Narrativa y ensayo desde Chile; rompe el eje México-Argentina."
+
+  - id: nyrb
+    nombre: "New York Review of Books"
+    feed: "http://feeds.feedburner.com/nybooks"
+    sitio: "https://www.nybooks.com"
+    temas: [libros]
+    tipo: longform
+    idioma: en
+    region: global
+    volumen: bajo
+    resumir: false
+    porque: "Complemento de LRB, no duplicado: más político-literario, menos insular."
 
   - id: la_tempestad
     nombre: "La Tempestad"
