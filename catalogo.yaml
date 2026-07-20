@@ -311,8 +311,24 @@ fuentes:
     max: 10
     porque: "Investigación y entrevista larga. Rompe historias que otros no tocan."
 
+  - id: la_jornada
+    nombre: "La Jornada"
+    feed: "https://www.jornada.com.mx/rss/edicion.xml"
+    sitio: "https://www.jornada.com.mx"
+    temas: [mexico]
+    tipo: medio
+    idioma: es
+    region: mx
+    postura: izquierda
+    financiamiento: anuncios
+    volumen: alto
+    resumir: true
+    max: 10
+    porque: "Recibe publicidad gubernamental significativa; aporta la voz pro-oficialista que equilibra al resto de la sección."
+
   - id: el_pais_mx
     nombre: "El País (México)"
+    feed: "https://feeds.elpais.com/mrss-s/pages/ep/site/elpais.com/section/mexico/portada"
     sitio: "https://elpais.com/mexico/"
     temas: [mexico]
     tipo: medio
