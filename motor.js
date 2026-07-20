@@ -5,13 +5,17 @@
  * test_motor.js en Node. Cualquier regla de filtrado/orden/agrupado del
  * muro vive AQUI, no en el HTML, para que la regresion tenga donde morder.
  *
- * REGLAS DURAS (fase 1 de TAREAS.md — el bug que ocultaba media app):
+ * REGLAS DURAS (fases 1 de TAREAS.md y 5 de TAREAS-v2.md):
  *   1. min_relevancia SOLO filtra articulos de fuentes resumidas.
  *      Los de resumir:false (longform, podcasts, cine, libros) SIEMPRE pasan.
  *   2. Los articulos sin puntaje no se hunden: flotan neutrales (score 5)
  *      y entre si se ordenan por fecha, reciente primero.
- *   3. El tope por medio solo aplica a fuentes resumidas: long-form y
- *      podcasts publican poco y un tope agresivo no tiene sentido.
+ *   3. Topes por volumen, distintos por naturaleza:
+ *      - resumidas: tope por MEDIO (5). Evita que un diario prolifico
+ *        inunde el tema; el ranking de Claude ya ordena el resto.
+ *      - resumir:false: tope por FUENTE (3). Sin ranking caen todos los
+ *        items planos (el fix de "120 noticias en libros"): 3 frescos
+ *        por cabecera bastan, sin perder fuentes del catalogo.
  */
 (function (root, factory) {
   if (typeof module === 'object' && module.exports) module.exports = factory();
@@ -20,7 +24,8 @@
   'use strict';
 
   const MIN_RELEVANCIA = 4;   // corte de ruido para fuentes resumidas (0-4 = ruido)
-  const MAX_POR_MEDIO = 5;    // tope de notas por medio dentro de un tema (solo resumidas)
+  const MAX_POR_MEDIO = 5;    // tope de notas por medio dentro de un tema (resumidas)
+  const MAX_POR_FUENTE_SIN_RESUMIR = 3;  // tope por fuente en resumir:false
 
   // score: los resumidos usan su importancia; los no resumidos flotan a 5.
   const score = (a, f) => f.resumida ? (a.relevancia || 0) : 5;
@@ -68,16 +73,22 @@
     grupos.sort((a, b) => sc(b[0]) - sc(a[0])
       || String(b[0].publicado).localeCompare(String(a[0].publicado)));
 
-    // Regla 3: tope por medio solo para fuentes resumidas.
+    // Regla 3: topes por volumen. Como los grupos ya vienen ordenados
+    // (importancia/fecha), el tope conserva lo mejor y mas fresco.
     const vistos = {};
     return grupos.filter(g => {
       const f = fuentes.get(g[0].fuente);
-      if (!f.resumida) return true;
-      const k = g[0].medio || g[0].fuente;
+      if (f.resumida) {
+        const k = 'm:' + (g[0].medio || g[0].fuente);
+        vistos[k] = (vistos[k] || 0) + 1;
+        return vistos[k] <= MAX_POR_MEDIO;
+      }
+      const k = 'f:' + f.id;
       vistos[k] = (vistos[k] || 0) + 1;
-      return vistos[k] <= MAX_POR_MEDIO;
+      return vistos[k] <= MAX_POR_FUENTE_SIN_RESUMIR;
     });
   }
 
-  return { MIN_RELEVANCIA, MAX_POR_MEDIO, score, gruposDeTema };
+  return { MIN_RELEVANCIA, MAX_POR_MEDIO, MAX_POR_FUENTE_SIN_RESUMIR,
+           score, gruposDeTema };
 });

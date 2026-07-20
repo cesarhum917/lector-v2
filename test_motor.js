@@ -65,18 +65,23 @@ const lideres = arts => Motor.gruposDeTema({ ...base, articulos: arts }).map(g =
      'una nota de relevancia alta si va por encima de los sin puntaje');
 }
 
-// ---------- 4. el tope por medio NO recorta a los resumir:false
+// ---------- 4. topes por volumen (fase 5 de TAREAS-v2: el fix de
+// "120 noticias en libros"): resumir:false lleva tope de 3 POR FUENTE
 {
   const muchos = [];
-  for (let i = 1; i <= Motor.MAX_POR_MEDIO + 3; i++)
-    muchos.push(art(`lf${i}`, 'revista_y', 0, i));
-  for (let i = 1; i <= Motor.MAX_POR_MEDIO + 3; i++)
-    muchos.push(art(`np${i}`, 'prensa_x', 6, i));
+  for (let i = 1; i <= 10; i++) muchos.push(art(`lf${i}`, 'revista_y', 0, i));
+  for (let i = 1; i <= 10; i++) muchos.push(art(`pz${i}`, 'podcast_z', 0, i));
+  for (let i = 1; i <= 10; i++) muchos.push(art(`np${i}`, 'prensa_x', 6, i));
   const ids = lideres(muchos);
-  ok(ids.filter(id => id.startsWith('lf')).length === Motor.MAX_POR_MEDIO + 3,
-     'el tope por medio no recorta fuentes resumir:false (publican poco)');
+  ok(ids.filter(id => id.startsWith('lf')).length === Motor.MAX_POR_FUENTE_SIN_RESUMIR,
+     `una fuente resumir:false no pasa de ${Motor.MAX_POR_FUENTE_SIN_RESUMIR} items por cabecera`);
+  ok(ids.filter(id => id.startsWith('pz')).length === Motor.MAX_POR_FUENTE_SIN_RESUMIR,
+     'el tope es POR FUENTE: otra fuente resumir:false conserva los suyos');
+  const lfs = ids.filter(id => id.startsWith('lf'));
+  ok(lfs.join(',') === 'lf10,lf9,lf8',
+     'el tope conserva los 3 MAS RECIENTES (orden por fecha)');
   ok(ids.filter(id => id.startsWith('np')).length === Motor.MAX_POR_MEDIO,
-     `el tope por medio (${Motor.MAX_POR_MEDIO}) si aplica a fuentes resumidas`);
+     `el tope por medio (${Motor.MAX_POR_MEDIO}) sigue aplicando a fuentes resumidas`);
 }
 
 // ---------- 5. filtro por financiamiento (tercer eje)
