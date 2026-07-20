@@ -130,15 +130,19 @@ paquetes:
     temas: [cine]
     idioma: es
 
+  # Los paquetes de FORMATO ofrecen el catalogo completo (son la puerta a
+  # ese formato); los tematicos filtran por esencial: true.
   - id: escuchar
     nombre: "Escuchar"
     descripcion: "Todos los podcasts del catálogo, de crónica a negocios."
     tipos: [podcast]
+    todo_el_catalogo: true
 
   - id: ver
     nombre: "Ver"
     descripcion: "Video-ensayo y análisis. YouTube sin el algoritmo de YouTube."
     tipos: [video]
+    todo_el_catalogo: true
 
 fuentes:
 

@@ -171,6 +171,10 @@ marca el subconjunto (~50) que **entra a los paquetes de onboarding**; el resto
 temas manualmente (frontend futuro). La regla de poda no cambia — una fuente
 mala se corta, no se degrada a `esencial: false`.
 
+Excepción: los paquetes de **formato** ("Escuchar", "Ver") llevan
+`todo_el_catalogo: true` y resuelven sin filtrar por esencial — son la puerta
+de entrada a ese formato, no una selección temática.
+
 ---
 
 ## Paquetes de arranque (onboarding)

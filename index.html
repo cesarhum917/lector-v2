@@ -166,8 +166,9 @@ const minutos = seg => `${Math.max(1, Math.round(seg / 60))} min`;
 // Ejes: temas, tipos, financiamiento, idioma. Si un eje se omite = "cualquiera".
 // Los paquetes de arranque solo resuelven fuentes esenciales; el resto del
 // catalogo queda para el explorador del frontend futuro (TAREAS-v2, fase 6).
+// Excepcion: los paquetes de formato (todo_el_catalogo: true) no filtran.
 const cumpleConsulta = (f, paq) =>
-  f.esencial &&
+  (paq.todo_el_catalogo || f.esencial) &&
   (!paq.tipos || paq.tipos.includes(f.tipo)) &&
   (!paq.temas || f.temas.some(t => paq.temas.includes(t))) &&
   (!paq.idioma || f.idioma === paq.idioma) &&
