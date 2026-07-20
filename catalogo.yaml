@@ -31,9 +31,6 @@ temas:
   - id: libros
     nombre: "Libros"
     color: "#c0caf5"
-  - id: ideas
-    nombre: "Ideas y long-form"
-    color: "#ff9e64"
   - id: diseno
     nombre: "Diseño y empaque"
     color: "#ff9ecd"
@@ -101,7 +98,7 @@ paquetes:
   - id: leer_despacio
     nombre: "Leer despacio"
     descripcion: "Ensayo, crónica e investigación. Poco volumen, alta señal. Sin resumir."
-    temas: [ideas, cine, libros]
+    temas: [cine, libros]
     tipos: [longform]
 
   - id: vender_en_amazon
@@ -415,7 +412,7 @@ fuentes:
     nombre: "The New Yorker"
     feed: "https://www.newyorker.com/feed/rss"
     sitio: "https://www.newyorker.com"
-    temas: [ideas]
+    temas: [internacional]
     tipo: longform
     financiamiento: corporativo
     idioma: en
@@ -427,7 +424,7 @@ fuentes:
     nombre: "ProPublica"
     feed: "https://www.propublica.org/feeds/propublica/main"
     sitio: "https://www.propublica.org"
-    temas: [ideas]
+    temas: [internacional]
     tipo: longform
     financiamiento: fundacion
     idioma: en
@@ -435,34 +432,11 @@ fuentes:
     resumir: false
     porque: "Investigación sin fines de lucro. Sin presión comercial sobre qué se publica."
 
-  - id: quanta
-    nombre: "Quanta Magazine"
-    feed: "https://www.quantamagazine.org/feed/"
-    sitio: "https://www.quantamagazine.org"
-    temas: [ideas]
-    tipo: longform
-    financiamiento: fundacion
-    idioma: en
-    volumen: bajo
-    resumir: false
-    porque: "Ciencia dura explicada sin simplificar de más. Sin equivalente en español."
-
-  - id: longreads
-    nombre: "Longreads"
-    feed: "https://longreads.com/feed/"
-    sitio: "https://longreads.com"
-    temas: [ideas]
-    tipo: agregador
-    idioma: en
-    volumen: bajo
-    resumir: false
-    porque: "Curaduría del mejor long-form de la semana. Un editor humano ya filtró."
-
   - id: gatopardo
     nombre: "Gatopardo"
     feed: "https://news.google.com/rss/search?q=site:gatopardo.com&hl=es-419&gl=MX&ceid=MX:es-419"
     sitio: "https://gatopardo.com"
-    temas: [ideas]
+    temas: [mexico]
     tipo: longform
     idioma: es
     region: mx
@@ -474,7 +448,7 @@ fuentes:
     nombre: "Quinto Elemento Lab"
     feed: "https://quintoelab.org/feed/"
     sitio: "https://quintoelab.org"
-    temas: [ideas, mexico]
+    temas: [mexico]
     tipo: longform
     financiamiento: fundacion
     idioma: es
@@ -487,7 +461,7 @@ fuentes:
     nombre: "Nexos"
     feed: "https://www.nexos.com.mx/feed/"
     sitio: "https://www.nexos.com.mx"
-    temas: [mexico, ideas]
+    temas: [mexico]
     tipo: longform
     idioma: es
     region: mx
@@ -499,7 +473,7 @@ fuentes:
     nombre: "Revista Anfibia"
     feed: "https://www.revistaanfibia.com/feed/"
     sitio: "https://www.revistaanfibia.com"
-    temas: [ideas]
+    temas: [internacional]
     tipo: longform
     idioma: es
     region: latam
@@ -541,7 +515,7 @@ fuentes:
     nombre: "Letras Libres"
     feed: "https://letraslibres.com/feed/"
     sitio: "https://letraslibres.com"
-    temas: [libros, ideas]
+    temas: [libros]
     tipo: longform
     idioma: es
     region: mx
@@ -553,7 +527,7 @@ fuentes:
     nombre: "London Review of Books"
     feed: "https://www.lrb.co.uk/feeds/rss"
     sitio: "https://www.lrb.co.uk"
-    temas: [libros, ideas]
+    temas: [libros]
     tipo: longform
     financiamiento: lectores
     idioma: en
@@ -569,7 +543,7 @@ fuentes:
     # feed del PODCAST (con duraciones); radioambulante.org/feed es el blog
     feed: "https://www.omnycontent.com/d/playlist/e73c998e-6e60-432f-8610-ae210140c5b1/b3c9b6e7-72ba-45c4-aff9-b1e7012d213b/092b66a8-4329-4183-bb12-b1e7012d216f/podcast.rss"
     sitio: "https://radioambulante.org"
-    temas: [ideas, internacional]
+    temas: [internacional]
     tipo: podcast
     financiamiento: lectores
     idioma: es
@@ -582,7 +556,7 @@ fuentes:
     nombre: "Dwarkesh Podcast"
     feed: "https://www.dwarkesh.com/feed"
     sitio: "https://www.dwarkesh.com"
-    temas: [ia, ideas]
+    temas: [ia]
     tipo: podcast
     idioma: en
     volumen: bajo
@@ -896,7 +870,7 @@ fuentes:
     nombre: "Eurozine"
     feed: "https://www.eurozine.com/feed/"
     sitio: "https://www.eurozine.com"
-    temas: [libros, ideas]
+    temas: [libros]
     tipo: longform
     idioma: en
     region: global
@@ -933,7 +907,7 @@ fuentes:
     # sin RSS público; vía Google News
     feed: "https://news.google.com/rss/search?q=site:the-tls.com&hl=en-US&gl=US&ceid=US:en"
     sitio: "https://www.the-tls.com"
-    temas: [libros, ideas]
+    temas: [libros]
     tipo: longform
     idioma: en
     region: global
@@ -946,7 +920,7 @@ fuentes:
     # sin RSS público; vía Google News
     feed: "https://news.google.com/rss/search?q=site:granta.com&hl=en-US&gl=US&ceid=US:en"
     sitio: "https://granta.com"
-    temas: [libros, ideas]
+    temas: [libros]
     tipo: longform
     idioma: en
     region: global
@@ -970,7 +944,7 @@ fuentes:
     nombre: "Confabulario (El Universal)"
     feed: "https://confabulario.eluniversal.com.mx/feed/"
     sitio: "https://confabulario.eluniversal.com.mx"
-    temas: [libros, ideas]
+    temas: [libros]
     tipo: longform
     idioma: es
     region: mx
@@ -983,7 +957,7 @@ fuentes:
     nombre: "La Tempestad"
     feed: "https://www.latempestad.mx/feed/"
     sitio: "https://www.latempestad.mx"
-    temas: [libros, cine, ideas]
+    temas: [libros, cine]
     tipo: longform
     idioma: es
     region: mx
@@ -1112,7 +1086,7 @@ fuentes:
     nombre: "Las Raras"
     feed: "https://rss.libsyn.com/shows/571675/destinations/4946660.xml"
     sitio: "https://lasraraspodcast.com"
-    temas: [ideas]
+    temas: [internacional]
     tipo: podcast
     idioma: es
     region: latam
@@ -1149,7 +1123,7 @@ fuentes:
     nombre: "Así como suena"
     feed: "https://feeds.simplecast.com/bDacRxP4"
     sitio: "https://asicomosuena.mx"
-    temas: [mexico, ideas]
+    temas: [mexico]
     tipo: podcast
     idioma: es
     region: mx
@@ -1161,7 +1135,7 @@ fuentes:
     nombre: "Humo"
     feed: "https://feeds.acast.com/public/shows/657250358321cf00120ae4c7"
     sitio: "https://lacorrientedelgolfo.mx"
-    temas: [mexico, ideas]
+    temas: [mexico]
     tipo: podcast
     idioma: es
     region: mx
@@ -1173,7 +1147,7 @@ fuentes:
     nombre: "La advertencia"
     feed: "https://feeds.acast.com/public/shows/513976c7-6771-4e1c-b085-2d752b0758e7"
     sitio: "https://lacorrientedelgolfo.mx"
-    temas: [mexico, ideas]
+    temas: [mexico]
     tipo: podcast
     idioma: es
     region: mx
@@ -1196,7 +1170,7 @@ fuentes:
     nombre: "Conversations with Tyler"
     feed: "https://rss.libsyn.com/shows/137081/destinations/850607.xml"
     sitio: "https://conversationswithtyler.com"
-    temas: [ideas, negocios]
+    temas: [negocios]
     tipo: podcast
     idioma: en
     volumen: bajo
@@ -1241,7 +1215,7 @@ fuentes:
     nombre: "The LRB Podcast"
     feed: "https://feeds.megaphone.fm/LRB9987052392"
     sitio: "https://www.lrb.co.uk/podcasts-and-videos"
-    temas: [libros, ideas]
+    temas: [libros]
     tipo: podcast
     idioma: en
     financiamiento: lectores
@@ -1266,7 +1240,7 @@ fuentes:
     nombre: "Search Engine"
     feed: "https://rss.amperwave.net/v2/feed/audacynetwork/search-engine"
     sitio: "https://www.searchengine.show"
-    temas: [ideas]
+    temas: [ia]
     tipo: podcast
     idioma: en
     volumen: bajo
@@ -1277,7 +1251,7 @@ fuentes:
     nombre: "The Rest Is History"
     feed: "https://feeds.megaphone.fm/GLT4787413333"
     sitio: "https://therestishistory.com"
-    temas: [ideas]
+    temas: [internacional]
     tipo: podcast
     idioma: en
     volumen: medio
@@ -1292,7 +1266,7 @@ fuentes:
   - id: yt_like_stories
     nombre: "Like Stories of Old"
     sitio: "https://www.youtube.com/@LikeStoriesofOld"
-    temas: [cine, ideas]
+    temas: [cine]
     tipo: video
     idioma: en
     volumen: bajo
@@ -1314,7 +1288,7 @@ fuentes:
   - id: yt_nerdwriter
     nombre: "Nerdwriter1"
     sitio: "https://www.youtube.com/@Nerdwriter1"
-    temas: [cine, ideas]
+    temas: [cine]
     tipo: video
     idioma: en
     volumen: bajo
@@ -1344,7 +1318,7 @@ fuentes:
   - id: yt_3blue1brown
     nombre: "3Blue1Brown"
     sitio: "https://www.youtube.com/@3blue1brown"
-    temas: [ia, ideas]
+    temas: [ia]
     tipo: video
     idioma: en
     volumen: bajo
@@ -1354,7 +1328,7 @@ fuentes:
   - id: yt_dw_documental
     nombre: "DW Documental"
     sitio: "https://www.youtube.com/@DWDocumental"
-    temas: [internacional, ideas]
+    temas: [internacional]
     tipo: video
     idioma: es
     financiamiento: publico_extranjero
