@@ -118,6 +118,7 @@ Cada fuente nueva tiene que ganarse el lugar contra las que ya están.
   volumen: medio                  # bajo (<5/sem) | medio (5-30) | alto (>30/día)
   postura: null                   # solo si aplica; ver abajo
   financiamiento: null            # quién paga; ver abajo. Obligatorio en tipo medio
+  esencial: true                  # ¿entra a los paquetes de onboarding? ver abajo
   resumir: true                   # ¿pasa por Claude? (false = long-form, se lee entero)
   max: 15                         # tope de ingesta por corrida
   porque: "Va meses adelante de la prensa; prueba las herramientas antes que nadie."
@@ -161,6 +162,14 @@ Se llena **siempre en `tipo: medio`**; en voces, primarias o long-form solo
 cuando aporte (una `primaria` ya declara su interés por definición). Las
 definiciones viven en `catalogo.yaml` y se exportan a `datos.json` para que el
 frontend las muestre al tocar la etiqueta.
+
+### Sobre `esencial`
+
+El catálogo completo es demasiado para un recién llegado. `esencial: true`
+marca el subconjunto (~50) que **entra a los paquetes de onboarding**; el resto
+(`esencial: false`) no se borra: queda en el catálogo, disponible al explorar
+temas manualmente (frontend futuro). La regla de poda no cambia — una fuente
+mala se corta, no se degrada a `esencial: false`.
 
 ---
 

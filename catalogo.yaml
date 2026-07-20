@@ -149,6 +149,7 @@ fuentes:
     sitio: "https://simonwillison.net"
     temas: [ia]
     tipo: voz
+    esencial: true
     idioma: en
     volumen: medio
     resumir: true
@@ -161,6 +162,7 @@ fuentes:
     sitio: "https://www.oneusefulthing.org"
     temas: [ia]
     tipo: voz
+    esencial: true
     idioma: en
     volumen: bajo
     resumir: true
@@ -172,6 +174,7 @@ fuentes:
     sitio: "https://importai.substack.com"
     temas: [ia]
     tipo: voz
+    esencial: false
     idioma: en
     volumen: bajo
     resumir: true
@@ -183,6 +186,7 @@ fuentes:
     sitio: "https://www.interconnects.ai"
     temas: [ia]
     tipo: voz
+    esencial: false
     idioma: en
     volumen: bajo
     resumir: true
@@ -194,6 +198,7 @@ fuentes:
     sitio: "https://openai.com"
     temas: [ia]
     tipo: primaria
+    esencial: true
     idioma: en
     volumen: bajo
     resumir: true
@@ -205,6 +210,7 @@ fuentes:
     sitio: "https://deepmind.google"
     temas: [ia]
     tipo: primaria
+    esencial: true
     idioma: en
     volumen: bajo
     resumir: true
@@ -216,6 +222,7 @@ fuentes:
     sitio: "https://huggingface.co"
     temas: [ia]
     tipo: primaria
+    esencial: false
     idioma: en
     volumen: medio
     resumir: true
@@ -228,6 +235,7 @@ fuentes:
     sitio: "https://www.wired.com"
     temas: [ia]
     tipo: medio
+    esencial: true
     financiamiento: corporativo
     idioma: en
     volumen: alto
@@ -241,6 +249,7 @@ fuentes:
     sitio: "https://www.technologyreview.com"
     temas: [ia]
     tipo: medio
+    esencial: true
     financiamiento: fundacion
     idioma: en
     volumen: medio
@@ -257,6 +266,7 @@ fuentes:
     sitio: "https://www.animalpolitico.com"
     temas: [mexico]
     tipo: medio
+    esencial: true
     financiamiento: lectores
     idioma: es
     region: mx
@@ -272,6 +282,7 @@ fuentes:
     sitio: "https://www.eluniversal.com.mx"
     temas: [mexico]
     tipo: medio
+    esencial: true
     financiamiento: anuncios
     idioma: es
     region: mx
@@ -286,6 +297,7 @@ fuentes:
     sitio: "https://www.elfinanciero.com.mx"
     temas: [mexico, negocios]
     tipo: medio
+    esencial: true
     financiamiento: corporativo
     idioma: es
     region: mx
@@ -302,6 +314,7 @@ fuentes:
     sitio: "https://aristeguinoticias.com"
     temas: [mexico]
     tipo: medio
+    esencial: true
     financiamiento: anuncios
     idioma: es
     region: mx
@@ -317,6 +330,7 @@ fuentes:
     sitio: "https://www.jornada.com.mx"
     temas: [mexico]
     tipo: medio
+    esencial: true
     idioma: es
     region: mx
     postura: izquierda
@@ -332,6 +346,7 @@ fuentes:
     sitio: "https://elpais.com/mexico/"
     temas: [mexico]
     tipo: medio
+    esencial: true
     financiamiento: corporativo
     idioma: es
     region: mx
@@ -349,6 +364,7 @@ fuentes:
     sitio: "https://adnoticias.mx"
     temas: [local]
     tipo: medio
+    esencial: true
     idioma: es
     region: mx
     volumen: medio
@@ -360,6 +376,7 @@ fuentes:
     sitio: "https://www.digitalmex.mx"
     temas: [local]
     tipo: medio
+    esencial: true
     idioma: es
     region: mx
     volumen: medio
@@ -372,6 +389,7 @@ fuentes:
     sitio: "https://news.google.com"
     temas: [local]
     tipo: agregador
+    esencial: true
     idioma: es
     region: mx
     volumen: alto
@@ -388,6 +406,7 @@ fuentes:
     sitio: "https://valueaddedresource.net"
     temas: [negocios]
     tipo: voz
+    esencial: true
     idioma: en
     volumen: medio
     resumir: true
@@ -399,6 +418,7 @@ fuentes:
     sitio: "https://marketing4ecommerce.mx"
     temas: [negocios]
     tipo: medio
+    esencial: true
     financiamiento: anuncios
     idioma: es
     region: mx
@@ -407,12 +427,29 @@ fuentes:
     max: 12
     porque: "La mejor cobertura de ecommerce mexicano: Amazon MX, Mercado Libre, TikTok Shop."
 
+  - id: el_economista
+    nombre: "El Economista"
+    # su RSS propio responde 403; vía Google News, como Animal Político
+    feed: "https://news.google.com/rss/search?q=site:eleconomista.com.mx&hl=es-419&gl=MX&ceid=MX:es-419"
+    sitio: "https://www.eleconomista.com.mx"
+    temas: [negocios]
+    tipo: medio
+    esencial: true
+    idioma: es
+    region: mx
+    financiamiento: anuncios
+    volumen: alto
+    resumir: true
+    max: 10
+    porque: "El diario económico mexicano de referencia: mercados, empresas y política económica desde adentro."
+
   - id: my_amazon_guy
     nombre: "My Amazon Guy"
     feed: "https://www.youtube.com/feeds/videos.xml?channel_id=UClUSEsDS2sdgNJfCcCM_5Uw"
     sitio: "https://www.youtube.com/@myamazonguy"
     temas: [negocios]
     tipo: video
+    esencial: true
     idioma: en
     volumen: alto
     resumir: true
@@ -428,6 +465,7 @@ fuentes:
     sitio: "https://www.fooddive.com"
     temas: [alimentos, negocios]
     tipo: medio
+    esencial: true
     financiamiento: anuncios
     idioma: en
     volumen: medio
@@ -443,6 +481,7 @@ fuentes:
     sitio: "https://www.newyorker.com"
     temas: [internacional]
     tipo: longform
+    esencial: true
     financiamiento: corporativo
     idioma: en
     volumen: medio
@@ -455,6 +494,7 @@ fuentes:
     sitio: "https://www.propublica.org"
     temas: [internacional]
     tipo: longform
+    esencial: true
     financiamiento: fundacion
     idioma: en
     volumen: bajo
@@ -467,6 +507,7 @@ fuentes:
     sitio: "https://gatopardo.com"
     temas: [mexico]
     tipo: longform
+    esencial: false
     idioma: es
     region: mx
     volumen: bajo
@@ -479,6 +520,7 @@ fuentes:
     sitio: "https://quintoelab.org"
     temas: [mexico]
     tipo: longform
+    esencial: false
     financiamiento: fundacion
     idioma: es
     region: mx
@@ -492,6 +534,7 @@ fuentes:
     sitio: "https://www.nexos.com.mx"
     temas: [mexico]
     tipo: longform
+    esencial: false
     idioma: es
     region: mx
     volumen: bajo
@@ -504,6 +547,7 @@ fuentes:
     sitio: "https://www.revistaanfibia.com"
     temas: [internacional]
     tipo: longform
+    esencial: false
     idioma: es
     region: latam
     volumen: bajo
@@ -520,6 +564,7 @@ fuentes:
     sitio: "https://reverseshot.org"
     temas: [cine]
     tipo: longform
+    esencial: true
     financiamiento: fundacion
     idioma: en
     volumen: bajo
@@ -532,6 +577,7 @@ fuentes:
     sitio: "https://www.sensesofcinema.com"
     temas: [cine]
     tipo: longform
+    esencial: true
     idioma: en
     volumen: bajo
     resumir: false
@@ -546,6 +592,7 @@ fuentes:
     sitio: "https://letraslibres.com"
     temas: [libros]
     tipo: longform
+    esencial: true
     idioma: es
     region: mx
     volumen: bajo
@@ -558,6 +605,7 @@ fuentes:
     sitio: "https://www.lrb.co.uk"
     temas: [libros]
     tipo: longform
+    esencial: true
     financiamiento: lectores
     idioma: en
     volumen: bajo
@@ -574,6 +622,7 @@ fuentes:
     sitio: "https://radioambulante.org"
     temas: [internacional]
     tipo: podcast
+    esencial: false
     financiamiento: lectores
     idioma: es
     region: latam
@@ -587,6 +636,7 @@ fuentes:
     sitio: "https://www.dwarkesh.com"
     temas: [ia]
     tipo: podcast
+    esencial: false
     idioma: en
     volumen: bajo
     resumir: false
@@ -599,6 +649,7 @@ fuentes:
   - id: alerta_miel_fraude
     nombre: "Miel: adulteración"
     tipo: alerta
+    esencial: true
     query: 'miel (adulteración OR fraude OR autenticidad OR pureza)'
     temas: [alimentos, apicola]
     idioma: es
@@ -610,6 +661,7 @@ fuentes:
   - id: alerta_regulacion_alimentos
     nombre: "Regulación alimentaria MX"
     tipo: alerta
+    esencial: true
     query: '(SENASICA OR COFEPRIS OR "NOM-051" OR etiquetado) alimentos'
     temas: [alimentos]
     idioma: es
@@ -621,6 +673,7 @@ fuentes:
   - id: alerta_amazon_mx
     nombre: "Amazon México"
     tipo: alerta
+    esencial: true
     query: '"Amazon México" (FBA OR tarifas OR vendedores OR políticas)'
     temas: [negocios]
     idioma: es
@@ -632,6 +685,7 @@ fuentes:
   - id: alerta_export_miel
     nombre: "Exportación de miel"
     tipo: alerta
+    esencial: true
     query: '("miel mexicana" OR "exportación de miel") (Canadá OR "Estados Unidos" OR aranceles OR CFIA OR FDA)'
     temas: [comercio_exterior, apicola]
     idioma: es
@@ -650,6 +704,7 @@ fuentes:
     sitio: "https://www.dropsitenews.com"
     temas: [internacional]
     tipo: medio
+    esencial: true
     idioma: en
     region: global
     financiamiento: lectores
@@ -664,6 +719,7 @@ fuentes:
     sitio: "https://theintercept.com"
     temas: [internacional]
     tipo: medio
+    esencial: false
     idioma: en
     region: us
     financiamiento: lectores
@@ -678,6 +734,7 @@ fuentes:
     sitio: "https://www.bellingcat.com"
     temas: [internacional]
     tipo: medio
+    esencial: true
     idioma: en
     region: global
     financiamiento: fundacion
@@ -691,6 +748,7 @@ fuentes:
     sitio: "https://www.occrp.org"
     temas: [internacional, mexico]
     tipo: medio
+    esencial: false
     idioma: en
     region: global
     financiamiento: fundacion
@@ -704,6 +762,7 @@ fuentes:
     sitio: "https://restofworld.org"
     temas: [internacional, ia]
     tipo: medio
+    esencial: true
     idioma: en
     region: global
     financiamiento: fundacion
@@ -717,6 +776,7 @@ fuentes:
     sitio: "https://www.404media.co"
     temas: [ia, internacional]
     tipo: medio
+    esencial: true
     idioma: en
     financiamiento: lectores
     volumen: medio
@@ -731,6 +791,7 @@ fuentes:
     sitio: "https://www.dw.com/es/actualidad/s-30684"
     temas: [internacional]
     tipo: medio
+    esencial: true
     idioma: es
     region: global
     financiamiento: publico_extranjero
@@ -745,6 +806,7 @@ fuentes:
     sitio: "https://www.bbc.com/mundo"
     temas: [internacional]
     tipo: medio
+    esencial: true
     idioma: es
     region: global
     financiamiento: publico_extranjero
@@ -759,6 +821,7 @@ fuentes:
     sitio: "https://www.france24.com/es/"
     temas: [internacional]
     tipo: medio
+    esencial: false
     idioma: es
     region: global
     financiamiento: publico_extranjero
@@ -774,6 +837,7 @@ fuentes:
     sitio: "https://elfaro.net"
     temas: [internacional, mexico]
     tipo: medio
+    esencial: true
     idioma: es
     region: latam
     financiamiento: lectores
@@ -788,6 +852,7 @@ fuentes:
     sitio: "https://ojo-publico.com"
     temas: [internacional]
     tipo: medio
+    esencial: false
     idioma: es
     region: latam
     financiamiento: fundacion
@@ -801,6 +866,7 @@ fuentes:
     sitio: "https://apublica.org"
     temas: [internacional]
     tipo: medio
+    esencial: false
     idioma: es
     region: latam
     financiamiento: fundacion
@@ -814,6 +880,7 @@ fuentes:
     sitio: "https://piedepagina.mx"
     temas: [mexico]
     tipo: medio
+    esencial: false
     idioma: es
     region: mx
     financiamiento: fundacion
@@ -832,6 +899,7 @@ fuentes:
     sitio: "https://www.caimanediciones.es"
     temas: [cine]
     tipo: longform
+    esencial: true
     idioma: es
     region: es
     volumen: bajo
@@ -845,6 +913,7 @@ fuentes:
     sitio: "https://www.otroscines.com"
     temas: [cine]
     tipo: medio
+    esencial: true
     idioma: es
     region: latam
     volumen: alto
@@ -859,6 +928,7 @@ fuentes:
     sitio: "https://lafuga.cl"
     temas: [cine]
     tipo: longform
+    esencial: false
     idioma: es
     region: latam
     volumen: bajo
@@ -872,6 +942,7 @@ fuentes:
     sitio: "https://www.cinetecanacional.net"
     temas: [cine]
     tipo: primaria
+    esencial: true
     idioma: es
     region: mx
     volumen: bajo
@@ -886,6 +957,7 @@ fuentes:
     sitio: "https://thefilmstage.com"
     temas: [cine]
     tipo: medio
+    esencial: true
     idioma: en
     volumen: alto
     resumir: true
@@ -898,6 +970,7 @@ fuentes:
     sitio: "https://fancine.substack.com"
     temas: [cine]
     tipo: medio
+    esencial: false
     idioma: es
     region: latam
     financiamiento: lectores
@@ -916,6 +989,7 @@ fuentes:
     sitio: "https://www.asymptotejournal.com"
     temas: [libros]
     tipo: longform
+    esencial: true
     idioma: en
     region: global
     volumen: bajo
@@ -928,6 +1002,7 @@ fuentes:
     sitio: "https://www.eurozine.com"
     temas: [libros]
     tipo: longform
+    esencial: true
     idioma: en
     region: global
     volumen: bajo
@@ -940,6 +1015,7 @@ fuentes:
     sitio: "https://asianreviewofbooks.com"
     temas: [libros]
     tipo: longform
+    esencial: false
     idioma: en
     region: global
     volumen: bajo
@@ -952,6 +1028,7 @@ fuentes:
     sitio: "https://wordswithoutborders.org"
     temas: [libros]
     tipo: longform
+    esencial: false
     idioma: en
     region: global
     volumen: bajo
@@ -965,6 +1042,7 @@ fuentes:
     sitio: "https://www.the-tls.com"
     temas: [libros]
     tipo: longform
+    esencial: false
     idioma: en
     region: global
     volumen: bajo
@@ -978,6 +1056,7 @@ fuentes:
     sitio: "https://granta.com"
     temas: [libros]
     tipo: longform
+    esencial: false
     idioma: en
     region: global
     volumen: bajo
@@ -990,6 +1069,7 @@ fuentes:
     sitio: "https://latinamericanliteraturetoday.org"
     temas: [libros]
     tipo: longform
+    esencial: false
     idioma: en
     region: latam
     volumen: bajo
@@ -1002,6 +1082,7 @@ fuentes:
     sitio: "https://confabulario.eluniversal.com.mx"
     temas: [libros]
     tipo: longform
+    esencial: true
     idioma: es
     region: mx
     financiamiento: anuncios
@@ -1019,6 +1100,7 @@ fuentes:
     sitio: "https://www.revistadelauniversidad.mx"
     temas: [libros]
     tipo: longform
+    esencial: true
     idioma: es
     region: mx
     volumen: bajo
@@ -1031,6 +1113,7 @@ fuentes:
     sitio: "https://estepais.com"
     temas: [libros]
     tipo: longform
+    esencial: false
     idioma: es
     region: mx
     volumen: bajo
@@ -1043,6 +1126,7 @@ fuentes:
     sitio: "https://revistasantiago.cl"
     temas: [libros]
     tipo: longform
+    esencial: false
     idioma: es
     region: latam
     volumen: bajo
@@ -1055,6 +1139,7 @@ fuentes:
     sitio: "https://www.nybooks.com"
     temas: [libros]
     tipo: longform
+    esencial: true
     idioma: en
     region: global
     volumen: bajo
@@ -1067,6 +1152,7 @@ fuentes:
     sitio: "https://www.latempestad.mx"
     temas: [libros, cine]
     tipo: longform
+    esencial: false
     idioma: es
     region: mx
     volumen: bajo
@@ -1082,6 +1168,7 @@ fuentes:
     sitio: "https://thedieline.com"
     temas: [diseno]
     tipo: medio
+    esencial: true
     idioma: en
     volumen: medio
     resumir: true
@@ -1096,6 +1183,7 @@ fuentes:
     sitio: "https://www.underconsideration.com/brandnew/"
     temas: [diseno]
     tipo: podcast
+    esencial: true
     idioma: en
     volumen: medio
     resumir: false
@@ -1107,6 +1195,7 @@ fuentes:
     sitio: "https://www.itsnicethat.com"
     temas: [diseno]
     tipo: medio
+    esencial: false
     idioma: en
     volumen: alto
     resumir: true
@@ -1123,6 +1212,7 @@ fuentes:
     sitio: "https://www.gob.mx/se"
     temas: [comercio_exterior]
     tipo: primaria
+    esencial: true
     idioma: es
     region: mx
     financiamiento: estatal_local
@@ -1141,6 +1231,7 @@ fuentes:
     sitio: "https://www.beeculture.com"
     temas: [apicola]
     tipo: medio
+    esencial: true
     idioma: en
     volumen: bajo
     resumir: true
@@ -1155,6 +1246,7 @@ fuentes:
     sitio: "https://www.ableton.com/en/blog/"
     temas: [musica]
     tipo: primaria
+    esencial: false
     idioma: en
     volumen: bajo
     resumir: false
@@ -1166,6 +1258,7 @@ fuentes:
     sitio: "https://cdm.link"
     temas: [musica]
     tipo: voz
+    esencial: false
     idioma: en
     volumen: medio
     resumir: true
@@ -1183,6 +1276,7 @@ fuentes:
     sitio: "https://elhilo.audio"
     temas: [internacional, mexico]
     tipo: podcast
+    esencial: false
     idioma: es
     region: latam
     financiamiento: lectores
@@ -1196,6 +1290,7 @@ fuentes:
     sitio: "https://lasraraspodcast.com"
     temas: [internacional]
     tipo: podcast
+    esencial: false
     idioma: es
     region: latam
     volumen: bajo
@@ -1208,6 +1303,7 @@ fuentes:
     sitio: "https://www.hablemosescritoras.com"
     temas: [libros]
     tipo: podcast
+    esencial: false
     idioma: es
     region: latam
     volumen: bajo
@@ -1220,6 +1316,7 @@ fuentes:
     sitio: "https://cadenaser.com/podcast/un-libro-una-hora/"
     temas: [libros]
     tipo: podcast
+    esencial: false
     idioma: es
     region: es
     financiamiento: corporativo
@@ -1233,6 +1330,7 @@ fuentes:
     sitio: "https://asicomosuena.mx"
     temas: [mexico]
     tipo: podcast
+    esencial: false
     idioma: es
     region: mx
     volumen: bajo
@@ -1245,6 +1343,7 @@ fuentes:
     sitio: "https://lacorrientedelgolfo.mx"
     temas: [mexico]
     tipo: podcast
+    esencial: false
     idioma: es
     region: mx
     volumen: bajo
@@ -1257,6 +1356,7 @@ fuentes:
     sitio: "https://lacorrientedelgolfo.mx"
     temas: [mexico]
     tipo: podcast
+    esencial: false
     idioma: es
     region: mx
     volumen: bajo
@@ -1269,6 +1369,7 @@ fuentes:
     sitio: "https://www.acquired.fm"
     temas: [negocios]
     tipo: podcast
+    esencial: false
     idioma: en
     volumen: bajo
     resumir: false
@@ -1280,6 +1381,7 @@ fuentes:
     sitio: "https://conversationswithtyler.com"
     temas: [negocios]
     tipo: podcast
+    esencial: false
     idioma: en
     volumen: bajo
     resumir: false
@@ -1291,6 +1393,7 @@ fuentes:
     sitio: "https://www.latent.space"
     temas: [ia]
     tipo: podcast
+    esencial: false
     idioma: en
     volumen: bajo
     resumir: false
@@ -1302,6 +1405,7 @@ fuentes:
     sitio: "https://theintercept.com/podcasts/"
     temas: [internacional]
     tipo: podcast
+    esencial: false
     idioma: en
     financiamiento: lectores
     volumen: bajo
@@ -1314,6 +1418,7 @@ fuentes:
     sitio: "https://www.filmcomment.com/blog/category/podcast/"
     temas: [cine]
     tipo: podcast
+    esencial: true
     idioma: en
     volumen: bajo
     resumir: false
@@ -1325,6 +1430,7 @@ fuentes:
     sitio: "https://www.lrb.co.uk/podcasts-and-videos"
     temas: [libros]
     tipo: podcast
+    esencial: false
     idioma: en
     financiamiento: lectores
     volumen: bajo
@@ -1337,6 +1443,7 @@ fuentes:
     sitio: "https://www.helium10.com/resources/podcast/"
     temas: [negocios]
     tipo: podcast
+    esencial: false
     idioma: en
     financiamiento: corporativo
     volumen: medio
@@ -1350,6 +1457,7 @@ fuentes:
     sitio: "https://www.searchengine.show"
     temas: [ia]
     tipo: podcast
+    esencial: false
     idioma: en
     volumen: bajo
     resumir: false
@@ -1361,6 +1469,7 @@ fuentes:
     sitio: "https://therestishistory.com"
     temas: [internacional]
     tipo: podcast
+    esencial: false
     idioma: en
     volumen: medio
     resumir: false
@@ -1376,6 +1485,7 @@ fuentes:
     sitio: "https://www.youtube.com/@LikeStoriesofOld"
     temas: [cine]
     tipo: video
+    esencial: false
     idioma: en
     volumen: bajo
     resumir: false
@@ -1388,6 +1498,7 @@ fuentes:
     sitio: "https://www.youtube.com/channel/UCL5kBJmBUVFLYBDiSiK1VDw"
     temas: [cine]
     tipo: video
+    esencial: false
     idioma: en
     volumen: bajo
     resumir: false
@@ -1398,6 +1509,7 @@ fuentes:
     sitio: "https://www.youtube.com/@Nerdwriter1"
     temas: [cine]
     tipo: video
+    esencial: false
     idioma: en
     volumen: bajo
     resumir: false
@@ -1408,6 +1520,7 @@ fuentes:
     sitio: "https://www.youtube.com/@aiexplained-official"
     temas: [ia]
     tipo: video
+    esencial: true
     idioma: en
     volumen: medio
     resumir: true
@@ -1418,6 +1531,7 @@ fuentes:
     sitio: "https://www.youtube.com/@YannicKilcher"
     temas: [ia]
     tipo: video
+    esencial: false
     idioma: en
     volumen: bajo
     resumir: true
@@ -1428,6 +1542,7 @@ fuentes:
     sitio: "https://www.youtube.com/@3blue1brown"
     temas: [ia]
     tipo: video
+    esencial: false
     idioma: en
     volumen: bajo
     resumir: false
@@ -1438,6 +1553,7 @@ fuentes:
     sitio: "https://www.youtube.com/@DWDocumental"
     temas: [internacional]
     tipo: video
+    esencial: false
     idioma: es
     financiamiento: publico_extranjero
     volumen: medio

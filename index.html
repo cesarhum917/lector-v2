@@ -164,7 +164,10 @@ const minutos = seg => `${Math.max(1, Math.round(seg / 60))} min`;
 
 // ---------- el paquete es una CONSULTA sobre el catalogo, no una lista fija.
 // Ejes: temas, tipos, financiamiento, idioma. Si un eje se omite = "cualquiera".
+// Los paquetes de arranque solo resuelven fuentes esenciales; el resto del
+// catalogo queda para el explorador del frontend futuro (TAREAS-v2, fase 6).
 const cumpleConsulta = (f, paq) =>
+  f.esencial &&
   (!paq.tipos || paq.tipos.includes(f.tipo)) &&
   (!paq.temas || f.temas.some(t => paq.temas.includes(t))) &&
   (!paq.idioma || f.idioma === paq.idioma) &&

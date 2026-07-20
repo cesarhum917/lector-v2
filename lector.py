@@ -462,6 +462,9 @@ def exportar_json(con, config, dias=3):
             "region": f.get("region", "global"),
             "postura": f.get("postura"),
             "financiamiento": f.get("financiamiento"),
+            # esencial: entra a los paquetes de onboarding; el resto del
+            # catalogo queda para explorar (frontend futuro)
+            "esencial": bool(f.get("esencial")),
             "resumida": bool(f.get("resumir")),
             "porque": f.get("porque", ""),
         }
