@@ -200,8 +200,9 @@ function temasActivos(activas) {
 }
 const tiposActivos = activas =>
   D.tipos.filter(t => [...activas].some(id => FUENTES.get(id).tipo === t.id));
+// "na" (voz personal, primaria, agregador) no es un filtro ni un chip: se omite
 const finsActivos = activas =>
-  (D.financiamientos || []).filter(x =>
+  (D.financiamientos || []).filter(x => x.id !== 'na' &&
     [...activas].some(id => FUENTES.get(id).financiamiento === x.id));
 
 // ---------- seleccion + agrupado: vive en motor.js (probado por test_motor.js)
@@ -239,7 +240,7 @@ function htmlArticulo(grupo) {
   // que significa la etiqueta). Ver CATALOGO.md.
   const postura = f.postura
     ? `<button class="postura" data-fte="${esc(f.id)}" title="¿Qué significa?">${esc(f.postura)}</button>` : '';
-  const fin = f.financiamiento
+  const fin = (f.financiamiento && f.financiamiento !== 'na')
     ? `<button class="fin" data-fin="${esc(f.financiamiento)}" title="¿Quién paga este medio?">${esc(FIN_CORTO[f.financiamiento] || f.financiamiento)}</button>` : '';
   const thumb = a.imagen
     ? (esVideoConThumb
@@ -399,7 +400,8 @@ function pintarPanel() {
         const off = P.fuentesOcultas.includes(f.id);
         const temas = f.temas.map(t => TEMAS.get(t)?.nombre || t).join(', ');
         const meta = [TIPONOM.get(f.tipo) || f.tipo, temas, f.postura,
-                      f.financiamiento && (FIN_CORTO[f.financiamiento] || f.financiamiento)]
+                      f.financiamiento && f.financiamiento !== 'na'
+                        && (FIN_CORTO[f.financiamiento] || f.financiamiento)]
                      .filter(Boolean).join(' · ');
         return `<div class="fte ${off ? 'off' : ''}" data-fte="${esc(f.id)}">
           ${favicon(f.dominio)}
