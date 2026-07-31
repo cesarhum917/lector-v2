@@ -7,15 +7,18 @@
 # ============================================================
 
 temas:
+  - id: mexico
+    nombre: "México"
+    color: "#9ece6a"
+  - id: economia
+    nombre: "Economía y bolsa"
+    color: "#7dcfff"
   - id: ia          # el id no cambia: las prefs guardadas apuntan a el
     nombre: "IA y tecnología"
     color: "#7aa2f7"
   - id: negocios
     nombre: "Negocios y ecommerce"
     color: "#e0a83a"
-  - id: mexico
-    nombre: "México"
-    color: "#9ece6a"
   - id: local
     nombre: "Toluca / EdoMex"
     color: "#73daca"
@@ -98,6 +101,12 @@ paquetes:
     temas: [mexico]
     tipos: [medio, agregador]
 
+  - id: economia_bolsa
+    nombre: "Economía y bolsa"
+    descripcion: "Mercados, Banxico y macro: Bloomberg Línea y la prensa financiera, sin el ruido de la nota política."
+    temas: [economia]
+    tipos: [medio, agregador, alerta]
+
   - id: leer_despacio
     nombre: "Leer despacio"
     descripcion: "Ensayo, crónica e investigación. Poco volumen, alta señal. Sin resumir."
@@ -142,6 +151,12 @@ paquetes:
     nombre: "Ver"
     descripcion: "Video-ensayo y análisis. YouTube sin el algoritmo de YouTube."
     tipos: [video]
+    todo_el_catalogo: true
+
+  - id: musica
+    nombre: "Música"
+    descripcion: "Recomendaciones diarias a la medida del grupo (álbum, DJ set y canción) + técnica de producción."
+    temas: [musica]
     todo_el_catalogo: true
 
 fuentes:
@@ -280,6 +295,7 @@ fuentes:
     sitio: "https://www.animalpolitico.com"
     temas: [mexico]
     tipo: medio
+    peso: 2      # predomina en la seccion (boost de +1 y mas lugares)
     esencial: true
     financiamiento: fundacion
     idioma: es
@@ -309,7 +325,7 @@ fuentes:
   - id: el_financiero
     nombre: "El Financiero"
     sitio: "https://www.elfinanciero.com.mx"
-    temas: [mexico, negocios]
+    temas: [mexico, negocios, economia]
     tipo: medio
     esencial: true
     financiamiento: corporativo
@@ -450,7 +466,7 @@ fuentes:
     # su RSS propio responde 403; vía Google News, como Animal Político
     feed: "https://news.google.com/rss/search?q=site:eleconomista.com.mx&hl=es-419&gl=MX&ceid=MX:es-419"
     sitio: "https://www.eleconomista.com.mx"
-    temas: [negocios]
+    temas: [negocios, economia]
     tipo: medio
     esencial: true
     idioma: es
@@ -1629,3 +1645,94 @@ fuentes:
     resumir: false
     max: 8
     porque: "Documental largo en español, gratis. Mismo criterio de DW: ajeno a los poderes que cubre."
+
+  # ==========================================================
+  # ECONOMÍA Y BOLSA — el referente es Bloomberg; su edición
+  # LatAm en español (Bloomberg Línea) sí abre su RSS.
+  # ==========================================================
+  - id: bloomberg_linea
+    nombre: "Bloomberg Línea"
+    feed: "https://www.bloomberglinea.com/arc/outboundfeeds/rss/?outputType=xml"
+    sitio: "https://www.bloomberglinea.com"
+    temas: [economia]
+    tipo: medio
+    financiamiento: corporativo
+    esencial: true
+    idioma: es
+    region: latam
+    volumen: alto
+    resumir: true
+    max: 12
+    porque: "El estándar Bloomberg aplicado a LatAm, en español. Mercados y macro sin traducción de segunda mano."
+
+  - id: expansion_mx
+    nombre: "Expansión"
+    feed: "https://expansion.mx/rss"
+    sitio: "https://expansion.mx"
+    temas: [economia, negocios]
+    tipo: medio
+    financiamiento: corporativo
+    esencial: true
+    idioma: es
+    region: mx
+    volumen: alto
+    resumir: true
+    max: 10
+    porque: "La revista de negocios mexicana de referencia: empresas y economía con reporteo propio."
+
+  - id: el_ceo
+    nombre: "EL CEO"
+    feed: "https://elceo.com/feed/"
+    sitio: "https://elceo.com"
+    temas: [economia]
+    tipo: medio
+    financiamiento: anuncios
+    esencial: true
+    idioma: es
+    region: mx
+    volumen: medio
+    resumir: true
+    porque: "Mercados y finanzas mexicanas en corto: BMV, tasas y peso sin la sección de espectáculos."
+
+  - id: marketwatch
+    nombre: "MarketWatch"
+    feed: "https://feeds.content.dowjones.io/public/rss/mw_topstories"
+    sitio: "https://www.marketwatch.com"
+    temas: [economia]
+    tipo: medio
+    financiamiento: corporativo
+    esencial: true
+    idioma: en
+    region: us
+    volumen: alto
+    resumir: true
+    max: 8
+    porque: "El pulso diario de Wall Street (Dow Jones). Lo que mueve a los mercados que mueven al peso."
+
+  - id: cnbc_economia
+    nombre: "CNBC Economy"
+    feed: "https://www.cnbc.com/id/20910258/device/rss/rss.html"
+    sitio: "https://www.cnbc.com/economy/"
+    temas: [economia]
+    tipo: medio
+    financiamiento: anuncios
+    esencial: false
+    idioma: en
+    region: us
+    volumen: medio
+    resumir: true
+    max: 8
+    porque: "Macro de EE.UU. (Fed, empleo, inflación): el contexto de toda decisión de Banxico."
+
+  - id: alerta_mercados_mx
+    nombre: "Mercados México"
+    tipo: alerta
+    query: '(Banxico OR "tipo de cambio" OR "bolsa mexicana" OR BMV OR inflación) México'
+    temas: [economia]
+    financiamiento: na
+    esencial: true
+    idioma: es
+    region: mx
+    resumir: true
+    autor: cesar
+    porque: "Vigila Banxico, el peso y la BMV en toda la prensa a la vez."

@@ -26,9 +26,19 @@
   const MIN_RELEVANCIA = 4;   // corte de ruido para fuentes resumidas (0-4 = ruido)
   const MAX_POR_MEDIO = 5;    // tope de notas por medio dentro de un tema (resumidas)
   const MAX_POR_FUENTE_SIN_RESUMIR = 3;  // tope por fuente en resumir:false
+  const HORAS_RECIENTE = 48;  // "las del dia primero, junto con las de un dia antes"
 
   // score: los resumidos usan su importancia; los no resumidos flotan a 5.
-  const score = (a, f) => f.resumida ? (a.relevancia || 0) : 5;
+  // El "peso" de la fuente (catalogo) la hace predominar: peso 2 = +1 de
+  // score y mas lugares en el tope por medio, sin excluir a las demas.
+  const score = (a, f) =>
+    (f.resumida ? (a.relevancia || 0) : 5) + Math.max(0, (f.peso || 1) - 1);
+
+  // En temas de noticias lo de HOY+AYER va primero; lo viejo abajo,
+  // cada bloque ordenado por score. Los resumir:false no cambian: su
+  // score uniforme (5) hace que dentro del bloque mande la fecha.
+  const esReciente = a =>
+    (Date.now() - new Date(a.publicado).getTime()) < HORAS_RECIENTE * 3600000;
 
   /*
    * Selecciona y agrupa los articulos de un tema.
@@ -70,7 +80,9 @@
       g.sort((x, y) => sc(y) - sc(x)
         || String(y.publicado).localeCompare(String(x.publicado)));
     // Regla 2: sin puntaje = score neutral 5; a igual score decide la fecha.
-    grupos.sort((a, b) => sc(b[0]) - sc(a[0])
+    // Antes que nada: el bloque de hoy+ayer va por encima del resto.
+    grupos.sort((a, b) => (esReciente(b[0]) - esReciente(a[0]))
+      || sc(b[0]) - sc(a[0])
       || String(b[0].publicado).localeCompare(String(a[0].publicado)));
 
     // Regla 3: topes por volumen. Como los grupos ya vienen ordenados
@@ -81,7 +93,8 @@
       if (f.resumida) {
         const k = 'm:' + (g[0].medio || g[0].fuente);
         vistos[k] = (vistos[k] || 0) + 1;
-        return vistos[k] <= MAX_POR_MEDIO;
+        // una fuente con peso>1 gana lugares extra ademas del boost
+        return vistos[k] <= MAX_POR_MEDIO + Math.max(0, ((f.peso || 1) - 1) * 3);
       }
       const k = 'f:' + f.id;
       vistos[k] = (vistos[k] || 0) + 1;
@@ -90,5 +103,5 @@
   }
 
   return { MIN_RELEVANCIA, MAX_POR_MEDIO, MAX_POR_FUENTE_SIN_RESUMIR,
-           score, gruposDeTema };
+           HORAS_RECIENTE, score, esReciente, gruposDeTema };
 });

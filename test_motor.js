@@ -110,5 +110,40 @@ const lideres = arts => Motor.gruposDeTema({ ...base, articulos: arts }).map(g =
      'los duplicados del mismo cluster se agrupan en una sola historia');
 }
 
+// ---------- 7. recencia: lo de HOY+AYER va primero en temas de noticias
+{
+  const h = n => new Date(Date.now() - n * 3600000).toISOString();
+  const arts = [
+    { id: 'vieja9', fuente: 'prensa_x', medio: 'prensa_x', relevancia: 9, cluster: 'vieja9', publicado: h(24 * 5) },
+    { id: 'hoy5', fuente: 'prensa_x', medio: 'prensa_x', relevancia: 5, cluster: 'hoy5', publicado: h(3) },
+    { id: 'ayer7', fuente: 'prensa_x', medio: 'prensa_x', relevancia: 7, cluster: 'ayer7', publicado: h(30) },
+  ];
+  const ids = lideres(arts);
+  ok(ids.join(',') === 'ayer7,hoy5,vieja9',
+     'hoy+ayer van primero (por score entre si); lo viejo abajo aunque puntue alto');
+}
+
+// ---------- 8. peso: la fuente con peso 2 predomina sin excluir al resto
+{
+  const fts = new Map([
+    ['ap', { id: 'ap', temas: ['mx'], tipo: 'medio', resumida: true, peso: 2 }],
+    ['otro', { id: 'otro', temas: ['mx'], tipo: 'medio', resumida: true }],
+  ]);
+  const h = n => new Date(Date.now() - n * 3600000).toISOString();
+  const arts = [];
+  for (let i = 1; i <= 10; i++)
+    arts.push({ id: `ap${i}`, fuente: 'ap', medio: 'AP', relevancia: 6, cluster: `ap${i}`, publicado: h(i) });
+  for (let i = 1; i <= 10; i++)
+    arts.push({ id: `ot${i}`, fuente: 'otro', medio: 'Otro', relevancia: 6, cluster: `ot${i}`, publicado: h(i) });
+  const ids = Motor.gruposDeTema({ articulos: arts, fuentes: fts, temaId: 'mx',
+    activas: new Set(fts.keys()), temasOn: new Set(['mx']) }).map(g => g[0].id);
+  ok(ids[0].startsWith('ap'),
+     'a igual relevancia, la fuente con peso 2 va arriba (boost +1)');
+  ok(ids.filter(id => id.startsWith('ap')).length === Motor.MAX_POR_MEDIO + 3,
+     `peso 2 gana lugares extra en el tope (${Motor.MAX_POR_MEDIO + 3} vs ${Motor.MAX_POR_MEDIO})`);
+  ok(ids.filter(id => id.startsWith('ot')).length === Motor.MAX_POR_MEDIO,
+     'las demas fuentes conservan sus lugares: predominar no es excluir');
+}
+
 console.log(fallas ? `\n${fallas} prueba(s) fallaron` : '\nTodo verde');
 process.exit(fallas ? 1 : 0);

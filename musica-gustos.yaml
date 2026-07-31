@@ -1,0 +1,211 @@
+nota: 'Perfil de gustos del grupo, destilado de su tabla de sugerencias 2022-2024. Sin nombres: solo obras
+  y promedios (0-10). Lo usa lector.py para las recomendaciones diarias.'
+sintesis: 'House y deep house clasico y contemporaneo (Moodymann, Kerri Chandler, Instant House), DJ sets
+  de sellos y series reales (Boiler Room, HOR, Trommel, fruitcast, KHIDI), electronica global y africana
+  (Ndagga Rhythm Force), dembow y reggaeton de barrio no comercial (El Alfa, La Perversa, Kaydy Cain/La
+  Zowi), rap mexicano (Tino el Pinguino), funk y soul (James Brown), pop indie con groove (Benny Sings,
+  Jamie xx, Lizzo). Valoran el groove, la seleccion profunda y lo que se siente vivo. NO les gusta: reggaeton
+  pop comercial y colaboraciones de playlist (Ximena Sarinana/Llane, Dimelo Flow, Duki), mashups indie
+  flojos.'
+muy_gustado:
+- artista: Journey to Tarab
+  obra: 'FRUITCAST #57 | nepomuk & von spazier | wellness oase feelfruit'
+  formato: set
+  promedio: 10.0
+- artista: Ndagga Rythm Force
+  obra: Walo Walo
+  formato: live
+  promedio: 10.0
+- artista: Tino el Pinguino
+  obra: Rubem
+  formato: rola
+  promedio: 9.8
+- artista: GarethisOnit
+  obra: One for the Ladies Vol.1
+  formato: album
+  promedio: 9.7
+- artista: el alfa
+  obra: Lebron en el bameso
+  formato: rola
+  promedio: 9.5
+- artista: Instant House
+  obra: Lost Horizons
+  formato: album
+  promedio: 9.5
+- artista: Benny Sings
+  obra: Young Hearths
+  formato: rola
+  promedio: 9.5
+- artista: Yasin Hazim
+  obra: Serafin Sinfonia Op84
+  formato: set
+  promedio: 9.5
+- artista: Yanamaste
+  obra: LIVE Set | 27/09/2020 @ KHIDI Club ,Tbilisi
+  formato: set
+  promedio: 9.5
+- artista: Jamie XX
+  obra: KILL DEM
+  formato: rola
+  promedio: 9.3
+- artista: Moodyman
+  obra: Mahogany Brown
+  formato: album
+  promedio: 9.3
+- artista: Kerri Chandler
+  obra: Boiler Room NYC 23 sept 2022
+  formato: dj set
+  promedio: 9.3
+- artista: Lizzo
+  obra: Special
+  formato: album
+  promedio: 9.2
+- artista: James Brown
+  obra: Get on the Good Foot
+  formato: álbum
+  promedio: 9.2
+- artista: Maqosa
+  obra: Trommel InSession 065
+  formato: set
+  promedio: 9.2
+- artista: Verraco
+  obra: HÖR - May 10 / 2022
+  formato: set
+  promedio: 9.2
+- artista: Kaydy Cain, La Zowi, Kabasaki
+  obra: Ping Pong
+  formato: rola
+  promedio: 9.2
+- artista: Everything but the girl
+  obra: Nothing Left to Loose
+  formato: cancion
+  promedio: 9.2
+- artista: Multiple Artists (Deeplay Music Disquera)
+  obra: Tour d la musique
+  formato: álbum
+  promedio: 9.0
+- artista: Maqosa
+  obra: Shelter Amsterdam (Concierto en Sloterdijk)
+  formato: set
+  promedio: 9.0
+- artista: La perversa x la tukiti x la baby
+  obra: siente el ki
+  formato: rola
+  promedio: 9.0
+- artista: Larry Heard
+  obra: Love's Arrival
+  formato: álbum
+  promedio: 9.0
+- artista: Ismael Rivera y sus Cachimbos
+  obra: Satélite
+  formato: rola
+  promedio: 9.0
+- artista: Kerri Chandler
+  obra: Spaces and Places
+  formato: álbum
+  promedio: 9.0
+- artista: Kerri Chandler
+  obra: Trionesphere
+  formato: album
+  promedio: 9.0
+- artista: Alvaro Diaz
+  obra: Lentito
+  formato: rola
+  promedio: 9.0
+- artista: Kerri Chandler
+  obra: Kerri Chandlers Dj Mix
+  formato: compilación
+  promedio: 9.0
+- artista: The Cure
+  obra: Play Out
+  formato: live
+  promedio: 9.0
+- artista: Sergio Mendes y el Brazil ´77
+  obra: Primal Roots
+  formato: disco
+  promedio: 9.0
+- artista: Tchaikovsky
+  obra: Piano Concert 1
+  formato: rola
+  promedio: 9.0
+- artista: Fujiyama
+  obra: Flying High
+  formato: rola
+  promedio: 9.0
+- artista: Yazin Hazim
+  obra: EG Spotlight 218
+  formato: set
+  promedio: 9.0
+- artista: Ian Pooley
+  obra: HÖR - Ian Pooley 20.01.2023
+  formato: set
+  promedio: 9.0
+- artista: Phone Traxxx
+  obra: SlapCast No 72
+  formato: set
+  promedio: 9.0
+- artista: Moodyman
+  obra: 'No'
+  formato: rola
+  promedio: 9.0
+- artista: Tainy
+  obra: Data
+  formato: albúm
+  promedio: 9.0
+- artista: Young Miko
+  obra: Wiggy | GALLERY SESSION
+  formato: rola
+  promedio: 9.0
+- artista: Dj Shadow
+  obra: Endtroducing
+  formato: album
+  promedio: 8.8
+- artista: Badbadnotgood
+  obra: VIVO
+  formato: live
+  promedio: 8.8
+- artista: Bandalos Chinos
+  obra: Full Performance Live On KEXP
+  formato: live
+  promedio: 8.8
+no_gustado:
+- artista: Ximena Sariñana, Llane
+  obra: El  Aquí Y El Ahora
+  formato: rola
+  promedio: 5.2
+- artista: SBTKRT
+  obra: BODMIN MOOR
+  formato: rola
+  promedio: 5.5
+- artista: Mac Miller
+  obra: I love Life, Thank you
+  formato: álbum
+  promedio: 6.0
+- artista: Dimelo Flow
+  obra: Always Dream
+  formato: álbum
+  promedio: 6.3
+- artista: Choclock
+  obra: Magua con Miel
+  formato: álbum
+  promedio: 6.3
+- artista: Sky Rompiendo Ft. Ryan Castro
+  obra: 'Sky Rompiendo ft. Ryan Castro | Boiler Room x Ballantines''s True Music Studios: Medellín'
+  formato: set
+  promedio: 6.3
+- artista: wait what
+  obra: the notorious xx
+  formato: mashup
+  promedio: 6.3
+- artista: Duki
+  obra: Temporada de Reggaeton vol. 2
+  formato: ep
+  promedio: 6.5
+- artista: Genosidra
+  obra: Arca- Prada (Genosidra Jersey Club)
+  formato: rola
+  promedio: 6.5
+- artista: Blanco Palamera
+  obra: Intimidade
+  formato: álbum
+  promedio: 6.7

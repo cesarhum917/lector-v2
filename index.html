@@ -94,6 +94,13 @@ button.pill:active{transform:scale(.95)}
 .dupes a{color:var(--gris)}
 .thumb{width:86px;height:60px;object-fit:cover;border-radius:6px;background:var(--linea);flex:none;margin-top:3px;filter:saturate(.85)}
 article.alta .thumb{width:118px;height:82px}
+/* recomendaciones musicales del dia */
+.rec-cat{font-family:var(--serif);font-style:italic;font-size:16px;color:var(--ink2);margin:18px 0 0}
+.rec{padding:12px 0;border-bottom:1px solid var(--linea)}
+.rec-tit{font-weight:600;color:var(--ink2);font-size:15px;margin-top:6px;text-wrap:balance}
+.rec-anio{color:var(--gris);font-weight:400}
+a.pill{text-decoration:none;display:inline-block}
+.rec-pie{color:var(--gris);font-size:11.5px;margin:10px 0 4px;font-style:italic;font-family:var(--serif)}
 .vacio{color:var(--gris);text-align:center;padding:70px 20px}
 .vacio code{font-family:var(--mono);font-size:12px}
 footer{max-width:680px;margin:56px auto 0;padding:16px 20px 0;color:var(--gris);font-size:12px;border-top:1px solid var(--linea)}
@@ -345,6 +352,40 @@ function htmlArticulo(grupo, i) {
   </article>`;
 }
 
+// ---------- musica: recomendaciones diarias a la medida del grupo.
+// Los links van a la BUSQUEDA de cada plataforma (siempre funcionan);
+// los DJ sets viven en YouTube/SoundCloud/Mixcloud, no en Spotify.
+const PLATAFORMA_URL = (p, q) => ({
+  'Spotify': 'https://open.spotify.com/search/' + q,
+  'Apple Music': 'https://music.apple.com/mx/search?term=' + q,
+  'YouTube': 'https://www.youtube.com/results?search_query=' + q,
+  'Bandcamp': 'https://bandcamp.com/search?q=' + q,
+  'SoundCloud': 'https://soundcloud.com/search?q=' + q,
+  'Mixcloud': 'https://www.mixcloud.com/search/?q=' + q,
+  'NTS': 'https://www.nts.live/search?q=' + q,
+}[p] || 'https://www.youtube.com/results?search_query=' + q);
+
+function htmlRecsMusica() {
+  if (!D.musica || !D.musica.recs || !D.musica.recs.length) return '';
+  const CAT = { album: 'Álbum', dj_set: 'DJ set', cancion: 'Canción' };
+  const porCat = {};
+  D.musica.recs.forEach(r => (porCat[r.categoria] ??= []).push(r));
+  const bloques = ['album', 'dj_set', 'cancion'].filter(c => porCat[c]).map(c =>
+    `<div class="rec-cat">${CAT[c]}</div>` +
+    porCat[c].map(r => {
+      const q = encodeURIComponent(`${r.artista} ${r.titulo}`);
+      return `<div class="rec">
+        <span class="pill ${r.nueva ? 'alta' : 'tipo'}">${r.nueva ? 'nuevo' : 'de catálogo'}</span>
+        <div class="rec-tit">${esc(r.artista)} — ${esc(r.titulo)}${r.anio ? ` <span class="rec-anio">(${esc(r.anio)})</span>` : ''}</div>
+        ${r.porque ? `<div class="sum">${esc(r.porque)}</div>` : ''}
+        <div class="tags">${(r.plataformas || []).map(p =>
+          `<a class="pill fin" href="${esc(PLATAFORMA_URL(p, q))}" target="_blank" rel="noopener">${esc(p)}</a>`).join('')}</div>
+      </div>`;
+    }).join('')).join('');
+  return bloques
+    + '<div class="rec-pie">Recomendado a la medida del grupo · se renueva cada mañana</div>';
+}
+
 // ---------- render principal
 function render() {
   const activas = fuentesActivas();
@@ -377,12 +418,14 @@ function render() {
   const aMostrar = filtroTema ? temas.filter(t => t.id === filtroTema) : temas;
   for (const tema of aMostrar) {
     const grupos = gruposDeTema(tema.id, activas, !filtroTema);
-    if (!grupos.length) continue;
+    // la seccion de musica abre con las recomendaciones del dia
+    const recs = (tema.id === 'musica' && !filtroTipo && !filtroFin) ? htmlRecsMusica() : '';
+    if (!grupos.length && !recs) continue;
     total += grupos.length;
     bloques.push(`<section id="${esc(tema.id)}">
       <div class="sec-cab"><span class="sec-dot" style="background:${esc(tema.color)}"></span>
-        <h2>${esc(tema.nombre)}</h2><span class="n">${grupos.length}</span></div>
-      ${grupos.map(g => htmlArticulo(g, i++)).join('')}
+        <h2>${esc(tema.nombre)}</h2><span class="n">${grupos.length || ''}</span></div>
+      ${recs}${grupos.map(g => htmlArticulo(g, i++)).join('')}
     </section>`);
   }
 

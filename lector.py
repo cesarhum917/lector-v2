@@ -124,6 +124,20 @@ def init_db():
         if col not in cols:
             con.execute(f"ALTER TABLE articulos ADD COLUMN {col} {tipo_sql}")
     con.execute("CREATE INDEX IF NOT EXISTS idx_pub ON articulos(publicado)")
+    # memoria de recomendaciones musicales (para no repetir)
+    con.execute("""
+        CREATE TABLE IF NOT EXISTS recs_musica (
+            id          INTEGER PRIMARY KEY AUTOINCREMENT,
+            fecha       TEXT,      -- YYYY-MM-DD
+            categoria   TEXT,      -- album | dj_set | cancion
+            nueva       INTEGER,   -- 1 = novedad, 0 = catalogo
+            artista     TEXT,
+            titulo      TEXT,
+            anio        TEXT,
+            porque      TEXT,
+            plataformas TEXT       -- JSON array
+        )
+    """)
     con.commit()
     return con
 
@@ -437,6 +451,98 @@ def procesar_con_claude(con, config, activo=True, marcar_sin_api=False):
 
 
 # ----------------------------------------------------------------------
+# MUSICA: recomendaciones diarias a la medida del grupo
+# ----------------------------------------------------------------------
+# A diferencia del resto del lector (RSS), la seccion de musica es
+# GENERATIVA: una llamada diaria a Claude con el perfil de gustos del
+# grupo (musica-gustos.yaml, destilado de su tabla de calificaciones)
+# produce 6 recomendaciones: album, dj set y cancion, cada una en
+# version novedad y version catalogo. La tabla recs_musica evita
+# repetir recomendaciones. Costo: 1 llamada/dia.
+GUSTOS_PATH = "musica-gustos.yaml"
+
+PROMPT_MUSICA = """Eres el curador musical de un grupo de tres amigos de Mexico.
+Su perfil, destilado de {n_obras} obras que calificaron de 0 a 10:
+
+SINTESIS: {sintesis}
+
+LO MAS GUSTADO (artista — obra [formato, promedio]):
+{top}
+
+LO QUE NO LES GUSTO:
+{bajo}
+
+Hoy es {hoy}. Genera EXACTAMENTE 6 recomendaciones:
+- 2 con "categoria":"album"  (una "nueva":true = lanzada en los ultimos ~3 meses; una "nueva":false = catalogo/clasico)
+- 2 con "categoria":"dj_set" (uno reciente, uno de archivo; SOLO sets reales y grabados: Boiler Room, HOR, NTS, Dekmantel, Trommel, Mixmag, Tiny Desk, etc.)
+- 2 con "categoria":"cancion" (una nueva, una de catalogo)
+
+Reglas:
+1. Nada que ya este en su historial ni en YA RECOMENDADO.
+2. "porque" conecta con SU gusto concreto (max 18 palabras, en espanol).
+3. Si no estas seguro de que algo exista tal cual, elige otra cosa segura.
+4. Variedad dentro de su perfil: no des 6 cosas del mismo genero.
+5. "plataformas": donde realmente se encuentra, de esta lista:
+   Spotify, Apple Music, YouTube, Bandcamp, SoundCloud, Mixcloud, NTS.
+   (Los DJ sets suelen vivir en YouTube/SoundCloud/Mixcloud, no en Spotify.)
+
+YA RECOMENDADO (no repetir):
+{previas}
+
+Responde SOLO con el array JSON, sin markdown:
+[{{"categoria":"album","nueva":true,"artista":"...","titulo":"...","anio":"2026","porque":"...","plataformas":["Spotify","Bandcamp"]}}]"""
+
+
+def recomendar_musica(con, activo=True):
+    if not os.path.exists(GUSTOS_PATH):
+        return
+    hoy = datetime.now(timezone.utc).date().isoformat()
+    if con.execute("SELECT COUNT(*) FROM recs_musica WHERE fecha=?", (hoy,)).fetchone()[0]:
+        print("\nMusica: las recomendaciones de hoy ya existen.")
+        return
+    if not activo:
+        print("\nMusica: sin API key, se conservan las recomendaciones previas.")
+        return
+
+    with open(GUSTOS_PATH, encoding="utf-8") as f:
+        gustos = yaml.safe_load(f)
+    previas = con.execute(
+        "SELECT artista, titulo FROM recs_musica ORDER BY id DESC LIMIT 90").fetchall()
+
+    fmt = lambda d: f'- {d["artista"]} — {d["obra"]} [{d["formato"]}, {d["promedio"]}]'
+    prompt = PROMPT_MUSICA.format(
+        n_obras=len(gustos["muy_gustado"]) + len(gustos["no_gustado"]),
+        sintesis=gustos["sintesis"],
+        top="\n".join(fmt(d) for d in gustos["muy_gustado"]),
+        bajo="\n".join(fmt(d) for d in gustos["no_gustado"]),
+        hoy=hoy,
+        previas="\n".join(f"- {a} — {t}" for a, t in previas) or "- (nada aun)",
+    )
+
+    from anthropic import Anthropic
+    try:
+        msg = Anthropic().messages.create(
+            model=MODELO, max_tokens=1500,
+            messages=[{"role": "user", "content": prompt}])
+        texto = re.sub(r"^```(?:json)?|```$", "", msg.content[0].text.strip(), flags=re.M).strip()
+        recs = json.loads(texto)
+        assert isinstance(recs, list) and len(recs) >= 4
+    except Exception as e:
+        print(f"\nMusica: fallo la generacion ({e}); se conservan las previas.")
+        return
+
+    for r in recs[:6]:
+        con.execute(
+            "INSERT INTO recs_musica (fecha, categoria, nueva, artista, titulo, anio, porque, plataformas) "
+            "VALUES (?,?,?,?,?,?,?,?)",
+            (hoy, r.get("categoria", "cancion"), 1 if r.get("nueva") else 0,
+             r.get("artista", ""), r.get("titulo", ""), str(r.get("anio", "")),
+             r.get("porque", ""), json.dumps(r.get("plataformas", []), ensure_ascii=False)))
+    con.commit()
+    print(f"\nMusica: {len(recs[:6])} recomendaciones nuevas para hoy.")
+
+
+# ----------------------------------------------------------------------
 # EXPORTAR datos.json (catalogo completo + articulos planos)
 # ----------------------------------------------------------------------
 DIAS_SIN_RESUMIR = 14   # ventana larga para resumir:false: longform y podcasts
@@ -465,6 +571,7 @@ def exportar_json(con, config, dias=3):
             # esencial: entra a los paquetes de onboarding; el resto del
             # catalogo queda para explorar (frontend futuro)
             "esencial": bool(f.get("esencial")),
+            "peso": f.get("peso", 1),
             "resumida": bool(f.get("resumir")),
             "porque": f.get("porque", ""),
         }
@@ -528,6 +635,17 @@ def exportar_json(con, config, dias=3):
         "fuentes": fuentes,
         "articulos": articulos,
     }
+
+    # recomendaciones musicales del dia mas reciente que exista
+    ult = con.execute("SELECT MAX(fecha) FROM recs_musica").fetchone()[0]
+    if ult:
+        filas_m = con.execute(
+            "SELECT categoria, nueva, artista, titulo, anio, porque, plataformas "
+            "FROM recs_musica WHERE fecha=? ORDER BY categoria, nueva DESC", (ult,)).fetchall()
+        datos["musica"] = {"generado": ult, "recs": [
+            {"categoria": r[0], "nueva": bool(r[1]), "artista": r[2], "titulo": r[3],
+             "anio": r[4], "porque": r[5], "plataformas": json.loads(r[6] or "[]")}
+            for r in filas_m]}
     with open(SALIDA_JSON, "w", encoding="utf-8") as f:
         json.dump(datos, f, ensure_ascii=False, separators=(",", ":"))
     kb = os.path.getsize(SALIDA_JSON) // 1024
@@ -557,6 +675,7 @@ def main():
             print("! Falta ANTHROPIC_API_KEY.")
         procesar_con_claude(con, config, activo=bool(usar_claude),
                             marcar_sin_api=args.sin_claude)
+        recomendar_musica(con, activo=bool(usar_claude))
 
     exportar_json(con, config, dias=args.dias)
     con.close()
