@@ -291,7 +291,9 @@ fuentes:
   # ==========================================================
   - id: animal_politico
     nombre: "Animal Político"
-    feed: "https://news.google.com/rss/search?q=site:animalpolitico.com&hl=es-419&gl=MX&ceid=MX:es-419"
+    # OJO: site:animalpolitico.com SIN www regreso a servir archivo de 2018;
+    # con www la query da contenido fresco (verificado 2026-07-31)
+    feed: "https://news.google.com/rss/search?q=site:www.animalpolitico.com&hl=es-419&gl=MX&ceid=MX:es-419"
     sitio: "https://www.animalpolitico.com"
     temas: [mexico]
     tipo: medio
